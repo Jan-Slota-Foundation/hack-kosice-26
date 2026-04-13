@@ -2,6 +2,7 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express'
 import express from 'express'
 
 import { appRouter } from './router'
+import { createContext } from './trpc'
 
 const app = express()
 
@@ -9,6 +10,7 @@ app.use(
   '/trpc',
   createExpressMiddleware({
     router: appRouter,
+    createContext,
   }),
 )
 
