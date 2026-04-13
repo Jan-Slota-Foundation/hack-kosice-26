@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { prisma } from '../prisma.ts'
+import { Prisma } from '@prisma/client'
 import { createTRPCRouter, publicProcedure} from '../trpc'
 import { TRPCError } from '@trpc/server'
 
@@ -28,23 +29,29 @@ export const exampleRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       try {
-      const user = await prisma.user.findUnique({
-        where: { id: input.id },
-      })
+        const user = await prisma.user.findUniqueOrThrow({
+          where: { id: input.id },
+        })
 
-      if (!user) {
+        return { user }
+      } catch (e) {
+        // Prisma "record not found"
+        if (
+          e instanceof Prisma.PrismaClientKnownRequestError &&
+          e.code === "P2025"
+        ) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `User with id ${input.id} not found`,
+          })
+        }
+
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: `User with id ${input.id} not found`,
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Unexpected error while fetching user",
+          cause: e,
         })
       }
-      return { user };
-    } catch (error) {
-      if (error instanceof TRPCError) {
-        throw error
-      }
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "An unexpected error occurred" })
-    }
-    }),
+  }),
 
 })
