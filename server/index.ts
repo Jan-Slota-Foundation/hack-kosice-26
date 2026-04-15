@@ -1,3 +1,6 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
 import { createExpressMiddleware } from '@trpc/server/adapters/express'
 import express from 'express'
 
@@ -13,6 +16,16 @@ app.use(
     createContext,
   }),
 )
+
+if (process.env.NODE_ENV === 'production') {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
+  const distPath = path.resolve(__dirname, '../dist')
+
+  app.use(express.static(distPath))
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'))
+  })
+}
 
 const PORT = process.env.PORT ?? 3001
 

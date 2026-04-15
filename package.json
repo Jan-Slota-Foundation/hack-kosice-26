@@ -8,6 +8,7 @@
     "dev:client": "vite",
     "dev:server": "tsx watch --env-file .env server/index.ts",
     "build": "tsc -b && tsc --noEmit && vite build",
+    "start": "NODE_ENV=production tsx server/index.ts",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"server/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"server/**/*.ts\"",
