@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+> **_NOTE:_**  Definitly not AI
