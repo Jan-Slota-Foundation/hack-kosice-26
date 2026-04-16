@@ -40,6 +40,15 @@ export default defineConfig([
       'react-refresh/only-export-components': 'off',
     },
   },
+  // shadcn/ui generated components: Vite handles constant exports correctly, CVA types are loose
+  {
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/array-type': 'off',
+    },
+  },
   {
     files: ['server/**/*.ts'],
     extends: [

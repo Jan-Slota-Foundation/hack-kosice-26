@@ -13,9 +13,7 @@ export const exampleRouter = createTRPCRouter({
 
   removeUsr: publicProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(async (opts) => {
-      const { input } = opts
-
+    .mutation(async ({ input }) => {
       const removedUser = await prisma.user.delete({
         where: {
           id: input.id,
@@ -51,6 +49,33 @@ export const exampleRouter = createTRPCRouter({
           message: 'Unexpected error while fetching user',
           cause: e,
         })
+      }
+    }),
+
+  createUser: publicProcedure
+    .input(z.object({ email: z.email(), name: z.string() }))
+    .mutation(async ({ input }) => {
+      try {
+        const newUser = await prisma.user.create({
+          data: {
+            email: input.email,
+            name: input.name,
+          },
+        })
+
+        return { newUser }
+      } catch (e) {
+        if (
+          e instanceof Prisma.PrismaClientKnownRequestError &&
+          e.code === 'P2002'
+        ) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'A user with this email already exists',
+          })
+        }
+
+        throw e
       }
     }),
 })
