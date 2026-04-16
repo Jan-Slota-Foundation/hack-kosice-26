@@ -8,6 +8,10 @@ import { routeTree } from './routeTree.gen'
 
 import './index.css'
 
+console.log(
+  `[build] ${__COMMIT_HASH__} "${__COMMIT_MESSAGE__}" built=${__BUILD_TIME__}`,
+)
+
 const router = createRouter({ routeTree })
 
 declare module '@tanstack/react-router' {
