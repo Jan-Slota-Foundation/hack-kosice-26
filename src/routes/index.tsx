@@ -1,16 +1,9 @@
+import { InputField } from '@/components/input-field'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  Field,
-  // FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input.tsx'
+import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { trpc } from '@/lib/trpc'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import z from 'zod'
 
@@ -64,15 +57,8 @@ function AddUserCard() {
             <FieldSet>
               <FieldLegend>Add a new user</FieldLegend>
               <div className="grid grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel>Email</FieldLabel>
-                  <Input name="email" required />
-                </Field>
-
-                <Field>
-                  <FieldLabel>Name</FieldLabel>
-                  <Input name="name" required />
-                </Field>
+                <InputField label="Email" name="email" required />
+                <InputField label="Name" name="name" required />
               </div>
               <Button type="submit">Add User</Button>
             </FieldSet>
@@ -94,11 +80,18 @@ function RemoveUserButton({ userId }: { userId: number }) {
       )
       return { previous }
     },
+
     onError: (_err, _input, context) => {
+      // Rollback of optimistic
       if (context?.previous) {
         utils.example.getUsers.setData(undefined, context.previous)
       }
     },
+
+    onSuccess: () => {
+      toast.success('Successfully removed user')
+    },
+
     onSettled: () => {
       void utils.example.getUsers.invalidate()
     },
@@ -122,16 +115,29 @@ function Index() {
 
   return (
     <div className="p-3">
-      <AddUserCard></AddUserCard>
+      <AddUserCard />
       {users.data && (
-        <div>
+        <div className="flex flex-col gap-4">
           {users.data.users.length === 0 && <div>no users found</div>}
+
           {users.data.users.map((user) => (
-            <div key={user.id}>
-              {user.name}
-              {user.id}
-              <RemoveUserButton userId={user.id} />
-            </div>
+            <Card key={user.id}>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  {user.name}
+                  {user.id}
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to="/users/$userId"
+                      params={{ userId: user.id.toString() }}
+                    >
+                      Show Detail
+                    </Link>
+                    <RemoveUserButton userId={user.id} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}
