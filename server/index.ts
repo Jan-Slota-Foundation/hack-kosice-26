@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { createExpressMiddleware } from '@trpc/server/adapters/express'
 import express from 'express'
 
+import { env } from './env'
 import { appRouter } from './router'
 import { createContext } from './trpc'
 
@@ -17,7 +18,7 @@ app.use(
   }),
 )
 
-if (process.env.NODE_ENV === 'production') {
+if (env.NODE_ENV === 'production') {
   const __dirname = path.dirname(fileURLToPath(import.meta.url))
   const distPath = path.resolve(__dirname, '../dist')
 
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-const PORT = process.env.PORT ?? 3001
+const PORT = env.PORT ?? 3001
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${String(PORT)}`)

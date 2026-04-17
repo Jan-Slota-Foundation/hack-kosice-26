@@ -3,6 +3,8 @@ import { httpBatchLink } from '@trpc/client'
 import { useState, type ReactNode } from 'react'
 import superjson from 'superjson'
 
+import { AuthProvider } from './auth-provider'
+import { supabase } from './supabase'
 import { trpc } from './trpc'
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -13,14 +15,26 @@ export function Providers({ children }: { children: ReactNode }) {
         httpBatchLink({
           url: '/trpc',
           transformer: superjson,
+          async headers() {
+            const {
+              data: { session },
+            } = await supabase.auth.getSession()
+            return session?.access_token
+              ? { authorization: `Bearer ${session.access_token}` }
+              : {}
+          },
         }),
       ],
     }),
   )
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    <AuthProvider>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </trpc.Provider>
+    </AuthProvider>
   )
 }
