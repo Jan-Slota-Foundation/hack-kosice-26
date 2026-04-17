@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import { createExpressMiddleware } from '@trpc/server/adapters/express'
 import express from 'express'
 
-import { env } from './env'
+import { env } from './lib/env'
 import { appRouter } from './router'
 import { createContext } from './trpc'
 

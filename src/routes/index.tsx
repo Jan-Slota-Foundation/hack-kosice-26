@@ -14,12 +14,22 @@ function Index() {
       {auth.isAuthenticated ? (
         <p>
           Signed in as <span className="font-medium">{auth.user?.email}</span>.
-          Go to <Link to="/users" className="underline">users</Link>.
+          Go to{' '}
+          <Link to="/users" className="underline">
+            users
+          </Link>
+          .
         </p>
       ) : (
         <p>
-          <Link to="/login" className="underline">Log in</Link> or{' '}
-          <Link to="/signup" className="underline">sign up</Link> to continue.
+          <Link to="/login" className="underline">
+            Log in
+          </Link>{' '}
+          or{' '}
+          <Link to="/signup" className="underline">
+            sign up
+          </Link>{' '}
+          to continue.
         </p>
       )}
     </div>

@@ -1,5 +1,5 @@
-import type { AuthState } from '@/lib/auth-context'
 import { Button } from '@/components/ui/button'
+import type { AuthState } from '@/lib/auth-context'
 import {
   createRootRouteWithContext,
   Link,
@@ -37,10 +37,14 @@ function RootLayout() {
             <Link to="/users" className="[&.active]:font-bold">
               Users
             </Link>
-            <span className="ml-auto text-sm text-muted-foreground">
+            <span className="text-muted-foreground ml-auto text-sm">
               {auth.user?.email}
             </span>
-            <Button variant="outline" size="sm" onClick={() => void handleSignOut()}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void handleSignOut()}
+            >
               Logout
             </Button>
           </>

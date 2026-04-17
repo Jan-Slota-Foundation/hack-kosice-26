@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
-import { prisma } from '../prisma.ts'
+import { prisma } from '../lib/prisma.ts'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
 export const exampleRouter = createTRPCRouter({

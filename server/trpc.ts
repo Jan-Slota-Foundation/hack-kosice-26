@@ -2,8 +2,8 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import superjson from 'superjson'
 
-import { prisma } from './prisma'
-import { supabase } from './supabase'
+import { prisma } from './lib/prisma'
+import { supabase } from './lib/supabase'
 
 export const createContext = async ({ req }: CreateExpressContextOptions) => {
   const header = req.headers.authorization
