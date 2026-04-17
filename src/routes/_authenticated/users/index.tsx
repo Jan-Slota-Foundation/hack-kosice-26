@@ -23,7 +23,7 @@ function UsersIndex() {
               <span className="text-muted-foreground text-xs">{user.id}</span>
               <Link
                 to="/users/$userId"
-                params={{ userId: user.id.toString() }}
+                params={{ userId: user.id }}
                 className="text-sm underline"
               >
                 Show Detail
