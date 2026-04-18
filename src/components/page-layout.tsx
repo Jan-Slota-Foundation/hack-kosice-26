@@ -1,16 +1,37 @@
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 interface PageLayoutProps {
   title: string
+  onBack?: () => void
   actions?: ReactNode
   children: ReactNode
 }
 
-export function PageLayout({ title, actions, children }: PageLayoutProps) {
+export function PageLayout({
+  title,
+  onBack,
+  actions,
+  children,
+}: PageLayoutProps) {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex items-center justify-between gap-4 px-8 py-6">
-        <h1 className="truncate text-2xl font-semibold">{title}</h1>
+        <div className="flex min-w-0 items-center gap-3">
+          {onBack ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-lg"
+              onClick={onBack}
+              aria-label="Go back"
+            >
+              <ArrowLeft />
+            </Button>
+          ) : null}
+          <h1 className="truncate text-2xl font-semibold">{title}</h1>
+        </div>
         {actions ? (
           <div className="flex shrink-0 items-center gap-2">{actions}</div>
         ) : null}

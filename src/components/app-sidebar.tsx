@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/lib/auth-context'
-import { Link, useRouter } from '@tanstack/react-router'
+import { Link, useRouter, useRouterState } from '@tanstack/react-router'
 import { ClipboardList, ImageIcon, LogOut, Plus } from 'lucide-react'
 
 const navItems = [
@@ -22,6 +22,9 @@ const navItems = [
 export function AppSidebar() {
   const { user, signOut } = useAuth()
   const router = useRouter()
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const isActive = (to: string) =>
+    pathname === to || pathname.startsWith(`${to}/`)
 
   const handleSignOut = async () => {
     await signOut()
@@ -63,12 +66,17 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        <SidebarGroup className="my-auto">
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map(({ to, label, icon: Icon }) => (
                 <SidebarMenuItem key={to}>
-                  <SidebarMenuButton tooltip={label} render={<Link to={to} />}>
+                  <SidebarMenuButton
+                    tooltip={label}
+                    isActive={isActive(to)}
+                    render={<Link to={to} />}
+                    className="text-sidebar-foreground/60 data-active:text-sidebar-foreground"
+                  >
                     <Icon />
                     <span>{label}</span>
                   </SidebarMenuButton>

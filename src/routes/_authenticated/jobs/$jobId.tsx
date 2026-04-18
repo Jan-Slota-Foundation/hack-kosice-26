@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { trpc } from '@/lib/trpc'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/jobs/$jobId')({
@@ -41,6 +41,7 @@ function formatBytes(bytes: number | null | undefined) {
 
 function JobDetail() {
   const { jobId } = Route.useParams()
+  const navigate = useNavigate()
   const utils = trpc.useUtils()
 
   const jobQuery = trpc.analysisJobs.getById.useQuery({ id: jobId })
@@ -69,21 +70,20 @@ function JobDetail() {
   const isDev = import.meta.env.DEV
   const title = job?.name ?? 'Analysis job'
 
-  const actions = (
-    <>
-      {job && (
-        <Badge variant={statusVariant(job.status)}>
-          {job.status.toLowerCase()}
-        </Badge>
-      )}
-      <Link to="/jobs" className="text-sm underline">
-        ← Back
-      </Link>
-    </>
-  )
+  const actions = job ? (
+    <Badge variant={statusVariant(job.status)}>
+      {job.status.toLowerCase()}
+    </Badge>
+  ) : null
 
   return (
-    <PageLayout title={title} actions={actions}>
+    <PageLayout
+      title={title}
+      onBack={() => {
+        void navigate({ to: '/jobs' })
+      }}
+      actions={actions}
+    >
       <div className="mx-auto flex max-w-4xl flex-col gap-4">
         {jobQuery.isLoading && <p>Loading...</p>}
         {jobQuery.isError && <p>{jobQuery.error.message}</p>}
