@@ -1,4 +1,5 @@
 import { Toaster } from '@/components/ui/sonner'
+import type { AuthState } from '@/lib/auth-context'
 import { InnerApp } from '@/lib/inner-app'
 import { createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
@@ -13,10 +14,20 @@ console.log(
   `[build] ${__COMMIT_HASH__} "${__COMMIT_MESSAGE__}" built=${__BUILD_TIME__}`,
 )
 
+const initialAuth: AuthState = {
+  session: null,
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  signIn: () => Promise.resolve({ error: null }),
+  signUp: () =>
+    Promise.resolve({ error: null, needsEmailConfirmation: false }),
+  signOut: () => Promise.resolve(),
+}
+
 const router = createRouter({
   routeTree,
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- filled in by <RouterProvider context={} /> before use
-  context: { auth: undefined! },
+  context: { auth: initialAuth },
 })
 
 declare module '@tanstack/react-router' {

@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import z from 'zod'
 
 const formSchema = z.object({
+  name: z.string().min(3, 'name must be at least 3 characters'),
   email: z.email(),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 })
@@ -24,6 +25,7 @@ function Signup() {
 
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     const parsed = formSchema.safeParse(
       Object.fromEntries(new FormData(event.currentTarget)),
     )
@@ -62,6 +64,8 @@ function Signup() {
             <FieldGroup>
               <FieldSet>
                 <FieldLegend>Sign up</FieldLegend>
+
+                <InputField label="Name" name="name" type="text" />
                 <InputField
                   label="Email"
                   name="email"
@@ -69,6 +73,7 @@ function Signup() {
                   autoComplete="email"
                   required
                 />
+
                 <InputField
                   label="Password"
                   name="password"
@@ -76,6 +81,7 @@ function Signup() {
                   autoComplete="new-password"
                   required
                 />
+
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Creating account...' : 'Create account'}
                 </Button>
