@@ -1,17 +1,17 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, UserRole } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { prisma } from '../lib/prisma.ts'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
-export const exampleRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   getUsers: protectedProcedure.query(async () => {
     const users = await prisma.user.findMany()
     return { users }
   }),
 
-  getUsrById: protectedProcedure
+  getUserById: protectedProcedure
     .input(z.object({ id: z.uuid() }))
     .query(async ({ input }) => {
       try {
@@ -37,5 +37,15 @@ export const exampleRouter = createTRPCRouter({
           cause: e,
         })
       }
+    }),
+
+  listPatientsByDoctorId: protectedProcedure
+    .input(z.object({ doctorId: z.uuid() }))
+    .query(async ({ input }) => {
+      const patients = await prisma.user.findMany({
+        where: { doctorId: input.doctorId, role: UserRole.PATIENT },
+        orderBy: { name: 'asc' },
+      })
+      return { patients }
     }),
 })

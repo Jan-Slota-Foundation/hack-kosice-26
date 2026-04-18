@@ -11,8 +11,9 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { useAuth } from '@/lib/auth-context'
+import { trpc } from '@/lib/trpc'
 import { Link, useRouter, useRouterState } from '@tanstack/react-router'
-import { ClipboardList, ImageIcon, LogOut, Plus } from 'lucide-react'
+import { ClipboardList, ImageIcon, LogOut, Plus, Users } from 'lucide-react'
 
 const navItems = [
   { to: '/tear-images', label: 'Tear images', icon: ImageIcon },
@@ -25,6 +26,12 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const isActive = (to: string) =>
     pathname === to || pathname.startsWith(`${to}/`)
+
+  const currentUser = trpc.user.getUserById.useQuery(
+    { id: user?.id ?? '' },
+    { enabled: Boolean(user?.id) },
+  )
+  const isDoctor = currentUser.data?.user.role === 'DOCTOR'
 
   const handleSignOut = async () => {
     await signOut()
@@ -82,6 +89,19 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {isDoctor && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    tooltip="Patients"
+                    isActive={isActive('/patients')}
+                    render={<Link to="/patients" />}
+                    className="text-sidebar-foreground/60 data-active:text-sidebar-foreground"
+                  >
+                    <Users />
+                    <span>Patients</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

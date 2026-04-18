@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
 import { Route as AuthenticatedTearImagesRouteImport } from './routes/_authenticated/tear-images'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients/index'
 import { Route as AuthenticatedJobsIndexRouteImport } from './routes/_authenticated/jobs/index'
 import { Route as AuthenticatedUsersUserIdRouteImport } from './routes/_authenticated/users/$userId'
 import { Route as AuthenticatedJobsJobIdRouteImport } from './routes/_authenticated/jobs/$jobId'
@@ -54,6 +55,12 @@ const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedPatientsIndexRoute =
+  AuthenticatedPatientsIndexRouteImport.update({
+    id: '/patients/',
+    path: '/patients/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedJobsIndexRoute = AuthenticatedJobsIndexRouteImport.update({
   id: '/jobs/',
   path: '/jobs/',
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/users/$userId': typeof AuthenticatedUsersUserIdRoute
   '/jobs/': typeof AuthenticatedJobsIndexRoute
+  '/patients/': typeof AuthenticatedPatientsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/users/$userId': typeof AuthenticatedUsersUserIdRoute
   '/jobs': typeof AuthenticatedJobsIndexRoute
+  '/patients': typeof AuthenticatedPatientsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_authenticated/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/_authenticated/users/$userId': typeof AuthenticatedUsersUserIdRoute
   '/_authenticated/jobs/': typeof AuthenticatedJobsIndexRoute
+  '/_authenticated/patients/': typeof AuthenticatedPatientsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/jobs/$jobId'
     | '/users/$userId'
     | '/jobs/'
+    | '/patients/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/jobs/$jobId'
     | '/users/$userId'
     | '/jobs'
+    | '/patients'
     | '/users'
   id:
     | '__root__'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/jobs/$jobId'
     | '/_authenticated/users/$userId'
     | '/_authenticated/jobs/'
+    | '/_authenticated/patients/'
     | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/patients/': {
+      id: '/_authenticated/patients/'
+      path: '/patients'
+      fullPath: '/patients/'
+      preLoaderRoute: typeof AuthenticatedPatientsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/jobs/': {
       id: '/_authenticated/jobs/'
       path: '/jobs'
@@ -231,6 +251,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedJobsJobIdRoute: typeof AuthenticatedJobsJobIdRoute
   AuthenticatedUsersUserIdRoute: typeof AuthenticatedUsersUserIdRoute
   AuthenticatedJobsIndexRoute: typeof AuthenticatedJobsIndexRoute
+  AuthenticatedPatientsIndexRoute: typeof AuthenticatedPatientsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
@@ -240,6 +261,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedJobsJobIdRoute: AuthenticatedJobsJobIdRoute,
   AuthenticatedUsersUserIdRoute: AuthenticatedUsersUserIdRoute,
   AuthenticatedJobsIndexRoute: AuthenticatedJobsIndexRoute,
+  AuthenticatedPatientsIndexRoute: AuthenticatedPatientsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 

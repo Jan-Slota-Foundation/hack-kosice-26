@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_authenticated/users/$userId')({
 function UserDetail() {
   const { userId } = Route.useParams()
 
-  const { data, isLoading, isError } = trpc.example.getUsrById.useQuery({
+  const { data, isLoading, isError } = trpc.user.getUserById.useQuery({
     id: userId,
   })
   if (isLoading) return <div className="p-3">Loading...</div>

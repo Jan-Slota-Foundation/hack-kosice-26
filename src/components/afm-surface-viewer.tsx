@@ -112,9 +112,12 @@ export function AfmSurfaceViewer({
   const graphDivRef = useRef<HTMLElement | null>(null)
   const [isDownloading, setIsDownloading] = useState(false)
 
-  const handlePlotInitialized = useCallback((_figure: unknown, gd: HTMLElement) => {
-    graphDivRef.current = gd
-  }, [])
+  const handlePlotInitialized = useCallback(
+    (_figure: unknown, gd: HTMLElement) => {
+      graphDivRef.current = gd
+    },
+    [],
+  )
 
   const handleDownloadPng = useCallback(async () => {
     const gd = graphDivRef.current
@@ -126,8 +129,17 @@ export function AfmSurfaceViewer({
         plotlyMod && typeof plotlyMod === 'object' && 'default' in plotlyMod
           ? (plotlyMod as { default: unknown }).default
           : plotlyMod
-      const downloadImage = (Plotly as { downloadImage: (gd: HTMLElement, opts: Record<string, unknown>) => Promise<string> }).downloadImage
-      const filename = activeMeta ? activeMeta.name.replace(/\s+/g, '_') : 'afm-surface'
+      const downloadImage = (
+        Plotly as {
+          downloadImage: (
+            gd: HTMLElement,
+            opts: Record<string, unknown>,
+          ) => Promise<string>
+        }
+      ).downloadImage
+      const filename = activeMeta
+        ? activeMeta.name.replace(/\s+/g, '_')
+        : 'afm-surface'
       await downloadImage(gd, {
         format: 'png',
         filename,
@@ -138,8 +150,8 @@ export function AfmSurfaceViewer({
     } finally {
       setIsDownloading(false)
     }
-  // activeMeta is read inside; include via closure dep
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // activeMeta is read inside; include via closure dep
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const channelQueries = useQueries({
@@ -362,34 +374,46 @@ export function AfmSurfaceViewer({
         ) : null}
       </div>
 
-      <div
-        className="bg-card/85 absolute top-3 left-3 z-10 flex w-72 flex-col gap-3 rounded-md border p-3 shadow-md backdrop-blur-sm"
-        title={`True physical aspect: 1:${trueRatio.toFixed(0)}`}
-      >
-        <div className="flex flex-col gap-1">
-          <label
-            className="text-muted-foreground text-xs font-medium"
-            htmlFor={`channel-${rawImageId}`}
-          >
-            Channel
-          </label>
-          <select
-            id={`channel-${rawImageId}`}
-            value={activeChannel}
-            onChange={(e) => {
-              setSelectedChannel(e.target.value)
-            }}
-            className="border-input bg-background text-foreground h-9 rounded-md border px-3 text-sm"
-          >
-            {channelMetas.map((c) => (
-              <option key={c.name} value={c.name}>
-                {c.name} ({c.unit})
-              </option>
-            ))}
-          </select>
+      {activeMeta && (
+        <div
+          className="text-muted-foreground absolute top-3 left-3 z-10 text-xs"
+          title={`True physical aspect: 1:${trueRatio.toFixed(0)}`}
+        >
+          {activeMeta.width}×{activeMeta.height}
+          <br />
+          {meta.scanSizeNm >= 1000
+            ? `${(meta.scanSizeNm / 1000).toFixed(2)} µm`
+            : `${meta.scanSizeNm.toFixed(0)} nm`}{' '}
+          scan
+          <br />
+          Rq {activeMeta.rms.toFixed(2)} {activeMeta.unit}
         </div>
+      )}
 
-        <div className="flex flex-col gap-1">
+      <div className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center px-20">
+        <div className="bg-card/85 pointer-events-auto flex gap-1 rounded-md border p-1 shadow-md backdrop-blur-sm">
+          {channelMetas.map((c) => {
+            const isActive = c.name === activeChannel
+            return (
+              <Button
+                key={c.name}
+                type="button"
+                variant={isActive ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => {
+                  setSelectedChannel(c.name)
+                }}
+                className="whitespace-nowrap"
+              >
+                {c.name}
+              </Button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center">
+        <div className="bg-card/85 pointer-events-auto flex w-72 flex-col gap-1 rounded-md border px-3 py-2 shadow-md backdrop-blur-sm">
           <label
             className="text-muted-foreground text-xs font-medium"
             htmlFor={`zexag-${rawImageId}`}
@@ -413,16 +437,6 @@ export function AfmSurfaceViewer({
             className="w-full"
           />
         </div>
-
-        {activeMeta && (
-          <div className="text-muted-foreground text-xs">
-            {activeMeta.width}×{activeMeta.height} ·{' '}
-            {meta.scanSizeNm >= 1000
-              ? `${(meta.scanSizeNm / 1000).toFixed(2)} µm`
-              : `${meta.scanSizeNm.toFixed(0)} nm`}{' '}
-            scan · Rq {activeMeta.rms.toFixed(2)} {activeMeta.unit}
-          </div>
-        )}
       </div>
 
       {plotData && (

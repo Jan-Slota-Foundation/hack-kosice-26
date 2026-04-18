@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_authenticated/users/')({
 })
 
 function UsersIndex() {
-  const users = trpc.example.getUsers.useQuery()
+  const users = trpc.user.getUsers.useQuery()
 
   if (users.isLoading) return <div className="p-3">Loading...</div>
   if (users.isError) return <div className="p-3">Error loading users</div>

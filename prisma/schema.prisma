@@ -17,9 +17,21 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   name      String
+  role      UserRole @default(PATIENT)
+
+  doctorId String? @db.Uuid
+  doctor   User?   @relation("DoctorPatients", fields: [doctorId], references: [id], onDelete: SetNull)
+  patients User[]  @relation("DoctorPatients")
 
   jobs   AnalysisJob[]
   images RawImage[]
+
+  @@index([doctorId])
+}
+
+enum UserRole {
+  DOCTOR
+  PATIENT
 }
 
 enum JobStatus {
