@@ -322,10 +322,9 @@ export function AfmSurfaceViewer({
 
   if (metaQuery.isLoading) {
     return (
-      <div className="flex h-full w-full flex-col gap-3 p-3">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-full w-full" />
-      </div>
+      <GradientCard className="relative h-full w-full gap-0 overflow-hidden py-0">
+        <Skeleton className="absolute inset-0 h-full w-full rounded-none" />
+      </GradientCard>
     )
   }
 

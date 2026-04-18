@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { useAuth } from '@/lib/auth-context'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import z from 'zod'
@@ -53,8 +53,8 @@ function Signup() {
   }
 
   return (
-    <div className="mx-auto max-w-sm p-3">
-      <Card>
+    <div className="flex min-h-svh items-center justify-center bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_60%),linear-gradient(to_bottom_right,rgba(99,102,241,0.05),transparent_70%)] p-4">
+      <Card className="w-full max-w-sm">
         <CardContent>
           <form
             onSubmit={(e) => {
@@ -88,6 +88,12 @@ function Signup() {
               </FieldSet>
             </FieldGroup>
           </form>
+          <p className="text-muted-foreground mt-4 text-center text-sm">
+            Already have an account?{' '}
+            <Link to="/login" className="text-foreground underline">
+              Log in
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>
