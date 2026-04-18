@@ -17,7 +17,7 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex items-center justify-between gap-4 px-8 py-6">
+      <div className="flex items-center justify-between gap-4 px-4 pt-6 pb-2">
         <div className="flex min-w-0 items-center gap-3">
           {onBack ? (
             <Button

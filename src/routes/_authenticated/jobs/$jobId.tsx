@@ -1,4 +1,5 @@
 import { AfmSurfaceViewer } from '@/components/afm-surface-viewer'
+import { HeightDistributionChart } from '@/components/height-distribution-chart'
 import { PageLayout } from '@/components/page-layout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,9 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  GradientCard,
+  GradientCardContent,
+  GradientCardDescription,
+  GradientCardHeader,
+  GradientCardTitle,
+} from '@/components/ui/gradient-card'
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { File as FileIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -46,26 +53,11 @@ function JobDetail() {
   const { jobId } = Route.useParams()
   const navigate = useNavigate()
   const utils = trpc.useUtils()
-  const [overrides, setOverrides] = useState<Map<string, boolean>>(new Map())
+  const [selectedOverride, setSelectedOverride] = useState<string | null>(null)
 
   const jobQuery = trpc.analysisJobs.getById.useQuery({ id: jobId })
   const firstImageId = jobQuery.data?.job.images[0]?.id ?? null
-
-  const isExpanded = (imageId: string): boolean => {
-    const override = overrides.get(imageId)
-    if (override !== undefined) return override
-    return imageId === firstImageId
-  }
-  const toggleExpanded = (imageId: string) => {
-    setOverrides((prev) => {
-      const next = new Map(prev)
-      const current = prev.get(imageId)
-      const defaultOpen = imageId === firstImageId
-      const currentlyOpen = current ?? defaultOpen
-      next.set(imageId, !currentlyOpen)
-      return next
-    })
-  }
+  const selectedImageId = selectedOverride ?? firstImageId
   const markFinished = trpc.analysisJobs.markFinished.useMutation({
     onSuccess: async () => {
       await utils.analysisJobs.getById.invalidate({ id: jobId })
@@ -105,83 +97,110 @@ function JobDetail() {
       }}
       actions={actions}
     >
-      <div className="mx-auto flex max-w-4xl flex-col gap-4">
+      <div className="flex h-full min-h-0 flex-col gap-4">
         {jobQuery.isLoading && <p>Loading...</p>}
         {jobQuery.isError && <p>{jobQuery.error.message}</p>}
 
         {job && (
-          <>
-            <Card>
-              <CardHeader>
-                <CardDescription>
-                  Created by {job.creator.name} · {formatDate(job.createdAt)}
-                  {job.finishedAt
-                    ? ` · finished ${formatDate(job.finishedAt) ?? ''}`
-                    : ''}
-                </CardDescription>
-              </CardHeader>
-              {job.error && (
-                <CardContent>
-                  <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
-                    <span className="font-medium">Error:</span> {job.error}
-                  </div>
-                </CardContent>
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[55%_45%]">
+            <div className="relative h-[60vh] lg:h-full">
+              {selectedImageId ? (
+                <AfmSurfaceViewer rawImageId={selectedImageId} />
+              ) : (
+                <p className="text-muted-foreground p-4 text-sm">
+                  No file selected.
+                </p>
               )}
-              {isDev && (
-                <CardContent className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={markFinished.isPending}
-                    onClick={() => {
-                      markFinished.mutate({ id: jobId })
-                    }}
-                  >
-                    Mark finished (dev)
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={markError.isPending}
-                    onClick={() => {
-                      markError.mutate({
-                        id: jobId,
-                        message: 'Manually marked as error from UI',
-                      })
-                    }}
-                  >
-                    Mark as error (dev)
-                  </Button>
-                </CardContent>
-              )}
-            </Card>
+            </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Files ({job.images.length.toString()})</CardTitle>
-                <CardDescription>
-                  Raw files uploaded for this job
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-2">
-                {job.images.length === 0 && (
-                  <p className="text-muted-foreground text-sm">
-                    No files attached to this job.
-                  </p>
+            <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+              <Card>
+                <CardHeader>
+                  <CardDescription>
+                    Created by {job.creator.name} · {formatDate(job.createdAt)}
+                    {job.finishedAt
+                      ? ` · finished ${formatDate(job.finishedAt) ?? ''}`
+                      : ''}
+                  </CardDescription>
+                </CardHeader>
+                {job.error && (
+                  <CardContent>
+                    <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
+                      <span className="font-medium">Error:</span> {job.error}
+                    </div>
+                  </CardContent>
                 )}
-                {job.images.map((image) => {
-                  const isOpen = isExpanded(image.id)
-                  return (
-                    <div
-                      key={image.id}
-                      className="flex flex-col gap-3 rounded-md border p-3"
+                {isDev && (
+                  <CardContent className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={markFinished.isPending}
+                      onClick={() => {
+                        markFinished.mutate({ id: jobId })
+                      }}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
-                          <FileIcon className="text-muted-foreground size-8" />
-                        </div>
+                      Mark finished (dev)
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={markError.isPending}
+                      onClick={() => {
+                        markError.mutate({
+                          id: jobId,
+                          message: 'Manually marked as error from UI',
+                        })
+                      }}
+                    >
+                      Mark as error (dev)
+                    </Button>
+                  </CardContent>
+                )}
+              </Card>
+
+              <div className="grid grid-cols-2 gap-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <GradientCard key={i} className="aspect-square">
+                    <GradientCardHeader>
+                      <GradientCardTitle>
+                        Height distribution {i.toString()}
+                      </GradientCardTitle>
+                      <GradientCardDescription>
+                        Occurrence frequency vs height (nm)
+                      </GradientCardDescription>
+                    </GradientCardHeader>
+                    <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
+                      <HeightDistributionChart />
+                    </GradientCardContent>
+                  </GradientCard>
+                ))}
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Files ({job.images.length.toString()})</CardTitle>
+                  <CardDescription>
+                    Raw files uploaded for this job
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-2">
+                  {job.images.length === 0 && (
+                    <p className="text-muted-foreground text-sm">
+                      No files attached to this job.
+                    </p>
+                  )}
+                  {job.images.map((image) => {
+                    const isSelected = image.id === selectedImageId
+                    return (
+                      <div
+                        key={image.id}
+                        className={`flex items-center gap-3 rounded-md border p-3 ${
+                          isSelected ? 'border-primary bg-accent/40' : ''
+                        }`}
+                      >
                         <div className="flex min-w-0 flex-1 flex-col">
                           <span className="truncate text-sm font-medium">
                             {image.filename}
@@ -193,13 +212,13 @@ function JobDetail() {
                         </div>
                         <Button
                           type="button"
-                          variant="outline"
+                          variant={isSelected ? 'default' : 'outline'}
                           size="sm"
                           onClick={() => {
-                            toggleExpanded(image.id)
+                            setSelectedOverride(image.id)
                           }}
                         >
-                          {isOpen ? 'Hide 3D' : 'View 3D'}
+                          {isSelected ? 'Viewing' : 'View 3D'}
                         </Button>
                         {image.downloadUrl && (
                           <a
@@ -212,18 +231,14 @@ function JobDetail() {
                           </a>
                         )}
                       </div>
-                      {isOpen && (
-                        <AfmSurfaceViewer rawImageId={image.id} />
-                      )}
-                    </div>
-                  )
-                })}
-              </CardContent>
-            </Card>
-          </>
+                    )
+                  })}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         )}
       </div>
     </PageLayout>
   )
 }
-
