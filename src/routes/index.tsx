@@ -17,6 +17,10 @@ function Index() {
           Go to{' '}
           <Link to="/users" className="underline">
             users
+          </Link>{' '}
+          or{' '}
+          <Link to="/upload" className="underline">
+            upload
           </Link>
           .
         </p>

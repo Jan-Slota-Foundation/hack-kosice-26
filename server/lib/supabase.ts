@@ -9,3 +9,11 @@ export const supabase = createClient(
     auth: { persistSession: false, autoRefreshToken: false },
   },
 )
+
+export const supabaseAdmin = createClient(
+  env.SUPABASE_PROJECT_URL,
+  env.SUPABASE_SECRET_KEY,
+  {
+    auth: { persistSession: false, autoRefreshToken: false },
+  },
+)

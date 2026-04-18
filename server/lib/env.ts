@@ -8,6 +8,7 @@ const schema = z.object({
   DIRECT_URL: z.string().min(1),
   SUPABASE_PROJECT_URL: z.url(),
   SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
+  SUPABASE_SECRET_KEY: z.string().min(1),
   PORT: z.coerce.number().int().positive().optional(),
 })
 
