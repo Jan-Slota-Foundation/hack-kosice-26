@@ -17,4 +17,47 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   name      String
+
+  jobs   AnalysisJob[]
+  images RawImage[]
+}
+
+enum JobStatus {
+  PROCESSING
+  FINISHED
+  ERROR
+}
+
+model AnalysisJob {
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String
+  status     JobStatus @default(PROCESSING)
+  error      String?
+  createdAt  DateTime  @default(now())
+  finishedAt DateTime?
+
+  creatorId String @db.Uuid
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  images RawImage[]
+
+  @@index([creatorId, createdAt(sort: Desc)])
+}
+
+model RawImage {
+  id          String   @id @default(uuid()) @db.Uuid
+  filename    String
+  contentType String
+  storagePath String   @unique
+  sizeBytes   Int?
+  createdAt   DateTime @default(now())
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  jobId String      @db.Uuid
+  job   AnalysisJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([jobId])
 }
