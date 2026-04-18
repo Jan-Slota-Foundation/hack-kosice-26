@@ -37,7 +37,6 @@ export const analysisJobsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1).max(200),
-        imageCount: z.number().int().min(1),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -55,29 +54,9 @@ export const analysisJobsRouter = createTRPCRouter({
     const jobs = await prisma.analysisJob.findMany({
       where: { creatorId: ctx.user.id },
       orderBy: { createdAt: 'desc' },
-      include: {
-        _count: { select: { images: true } },
-        images: {
-          orderBy: { createdAt: 'asc' },
-          take: 1,
-          select: { storagePath: true },
-        },
-      },
+      include: { _count: { select: { images: true } } },
     })
-
-    const previewPaths = jobs
-      .map((job) => job.images[0]?.storagePath)
-      .filter((path): path is string => Boolean(path))
-    const signed = await signPaths(previewPaths)
-
-    return {
-      jobs: jobs.map(({ images, ...job }) => ({
-        ...job,
-        previewUrl: images[0]
-          ? (signed.get(images[0].storagePath) ?? null)
-          : null,
-      })),
-    }
+    return { jobs }
   }),
 
   getById: protectedProcedure
@@ -100,7 +79,7 @@ export const analysisJobsRouter = createTRPCRouter({
       const signed = await signPaths(job.images.map((img) => img.storagePath))
       const images = job.images.map((img) => ({
         ...img,
-        previewUrl: signed.get(img.storagePath) ?? null,
+        downloadUrl: signed.get(img.storagePath) ?? null,
       }))
 
       return { job: { ...job, images } }

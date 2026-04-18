@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/card'
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { File as FileIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/jobs/$jobId')({
@@ -139,15 +140,15 @@ function JobDetail() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Images ({job.images.length.toString()})</CardTitle>
+                <CardTitle>Files ({job.images.length.toString()})</CardTitle>
                 <CardDescription>
-                  Raw .bmp files uploaded for this job
+                  Raw files uploaded for this job
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-2">
                 {job.images.length === 0 && (
                   <p className="text-muted-foreground text-sm">
-                    No images attached to this job.
+                    No files attached to this job.
                   </p>
                 )}
                 {job.images.map((image) => (
@@ -156,17 +157,7 @@ function JobDetail() {
                     className="flex items-center gap-3 rounded-md border p-3"
                   >
                     <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
-                      {image.previewUrl ? (
-                        <img
-                          src={image.previewUrl}
-                          alt={image.filename}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground text-xs">
-                          …
-                        </span>
-                      )}
+                      <FileIcon className="text-muted-foreground size-8" />
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate text-sm font-medium">
@@ -177,14 +168,14 @@ function JobDetail() {
                         {formatDate(image.createdAt)}
                       </span>
                     </div>
-                    {image.previewUrl && (
+                    {image.downloadUrl && (
                       <a
-                        href={image.previewUrl}
+                        href={image.downloadUrl}
                         target="_blank"
                         rel="noreferrer"
                         className="text-sm underline"
                       >
-                        Open
+                        Download
                       </a>
                     )}
                   </div>

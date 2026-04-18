@@ -1,10 +1,10 @@
-import { BmpDropzone } from '@/components/bmp-dropzone'
+import { RawFileDropzone } from '@/components/raw-file-dropzone'
 import { InputField } from '@/components/input-field'
 import { PageLayout } from '@/components/page-layout'
 import { Button } from '@/components/ui/button'
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useCallback, useRef, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/upload')({
@@ -13,26 +13,19 @@ export const Route = createFileRoute('/_authenticated/upload')({
 
 function UploadPage() {
   const navigate = useNavigate()
-  const filesRef = useRef<File[]>([])
   const [name, setName] = useState('')
-  const [fileCount, setFileCount] = useState(0)
+  const [files, setFiles] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
 
   const createJob = trpc.analysisJobs.create.useMutation()
   const uploadRaw = trpc.bytemaps.uploadRawToJob.useMutation()
   const markError = trpc.analysisJobs.markError.useMutation()
 
-  const handleItemsChange = useCallback((files: File[]) => {
-    filesRef.current = files
-    setFileCount(files.length)
-  }, [])
-
   const trimmedName = name.trim()
-  const canSubmit = trimmedName.length > 0 && fileCount > 0 && !isUploading
+  const canSubmit = trimmedName.length > 0 && files.length > 0 && !isUploading
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const files = filesRef.current
     if (files.length === 0) {
       toast.error('No files selected')
       return
@@ -46,7 +39,6 @@ function UploadPage() {
     try {
       const { jobId } = await createJob.mutateAsync({
         name: trimmedName,
-        imageCount: files.length,
       })
 
       const results = await Promise.allSettled(
@@ -55,7 +47,7 @@ function UploadPage() {
           return uploadRaw.mutateAsync({
             jobId,
             filename: file.name,
-            contentType: file.type || 'image/bmp',
+            contentType: file.type || 'application/octet-stream',
             data: new Uint8Array(buffer),
           })
         }),
@@ -75,11 +67,11 @@ function UploadPage() {
           message: `${failures.length.toString()} of ${results.length.toString()} uploads failed: ${reason}`,
         })
         toast.error(
-          `Job created with ${succeeded.toString()} of ${results.length.toString()} images (marked as error)`,
+          `Job created with ${succeeded.toString()} of ${results.length.toString()} files (marked as error)`,
         )
       } else {
         toast.success(
-          `Job "${trimmedName}" created with ${succeeded.toString()} image${succeeded === 1 ? '' : 's'}`,
+          `Job "${trimmedName}" created with ${succeeded.toString()} file${succeeded === 1 ? '' : 's'}`,
         )
       }
 
@@ -102,7 +94,7 @@ function UploadPage() {
         }}
       >
         <p className="text-muted-foreground text-sm">
-          Name your job and upload .bmp files to analyse.
+          Name your job and upload raw files to analyse.
         </p>
         <InputField
           label="Job name"
@@ -114,7 +106,7 @@ function UploadPage() {
           maxLength={200}
           disabled={isUploading}
         />
-        <BmpDropzone onItemsChange={handleItemsChange} />
+        <RawFileDropzone files={files} onFilesChange={setFiles} />
         <div>
           <Button type="submit" disabled={!canSubmit}>
             {isUploading ? 'Uploading…' : 'Create analysis job'}

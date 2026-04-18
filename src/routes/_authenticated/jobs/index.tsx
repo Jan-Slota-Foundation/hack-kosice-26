@@ -52,7 +52,7 @@ function JobsIndex() {
           <Card>
             <CardContent className="py-8 text-center">
               <p className="text-muted-foreground">
-                No analysis jobs yet. Upload some images to get started.
+                No analysis jobs yet. Upload some files to get started.
               </p>
               <Link
                 to="/upload"
@@ -72,36 +72,21 @@ function JobsIndex() {
             className="block"
           >
             <Card className="hover:bg-accent/30 transition-colors">
-              <CardHeader className="flex flex-row items-center gap-4">
-                <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
-                  {job.previewUrl ? (
-                    <img
-                      src={job.previewUrl}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-muted-foreground text-xs">
-                      No preview
-                    </span>
-                  )}
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <CardTitle className="flex items-center gap-2">
-                    <span className="truncate">{job.name}</span>
-                    <Badge variant={statusVariant(job.status)}>
-                      {job.status.toLowerCase()}
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription>
-                    {job._count.images} image
-                    {job._count.images === 1 ? '' : 's'} · created{' '}
-                    {formatDate(job.createdAt)}
-                    {job.finishedAt
-                      ? ` · finished ${formatDate(job.finishedAt) ?? ''}`
-                      : ''}
-                  </CardDescription>
-                </div>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <span className="truncate">{job.name}</span>
+                  <Badge variant={statusVariant(job.status)}>
+                    {job.status.toLowerCase()}
+                  </Badge>
+                </CardTitle>
+                <CardDescription>
+                  {job._count.images} file
+                  {job._count.images === 1 ? '' : 's'} · created{' '}
+                  {formatDate(job.createdAt)}
+                  {job.finishedAt
+                    ? ` · finished ${formatDate(job.finishedAt) ?? ''}`
+                    : ''}
+                </CardDescription>
               </CardHeader>
             </Card>
           </Link>

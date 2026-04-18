@@ -12,13 +12,8 @@ export const bytemapRouter = createTRPCRouter({
     .input(
       z.object({
         jobId: z.uuid(),
-        filename: z
-          .string()
-          .min(1)
-          .refine((name) => name.toLowerCase().endsWith('.bmp'), {
-            message: 'Only .bmp files are accepted',
-          }),
-        contentType: z.string().default('image/bmp'),
+        filename: z.string().min(1),
+        contentType: z.string().default('application/octet-stream'),
         data: z.instanceof(Uint8Array),
       }),
     )
