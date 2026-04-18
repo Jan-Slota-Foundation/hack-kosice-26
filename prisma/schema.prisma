@@ -70,6 +70,64 @@ model RawImage {
   jobId String      @db.Uuid
   job   AnalysisJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
+  result RawImageResult?
+
   @@index([userId])
   @@index([jobId])
+}
+
+model RawImageResult {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  imageId String   @unique @db.Uuid
+  image   RawImage @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  diagnosis  String
+  confidence Float
+
+  methods ResultMethod[]
+  graphs  ResultGraph[]
+}
+
+model ResultMethod {
+  id         String @id @default(uuid()) @db.Uuid
+  name       String
+  diagnosis  String
+  confidence Float
+
+  resultId String         @db.Uuid
+  result   RawImageResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@index([resultId])
+}
+
+enum AnalysisGraphType {
+  HEIGHT_DISTRIBUTION
+  DENSITY_VS_AREA
+}
+
+model ResultGraph {
+  id   String            @id @default(uuid()) @db.Uuid
+  type AnalysisGraphType
+
+  resultId String         @db.Uuid
+  result   RawImageResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  points GraphPoint[]
+
+  @@unique([resultId, type])
+}
+
+model GraphPoint {
+  id  String @id @default(uuid()) @db.Uuid
+  idx Int
+  x   Float
+  y   Float
+
+  graphId String      @db.Uuid
+  graph   ResultGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
+
+  @@index([graphId, idx])
 }

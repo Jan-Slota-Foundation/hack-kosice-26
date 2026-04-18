@@ -65,7 +65,21 @@ export const analysisJobsRouter = createTRPCRouter({
       const job = await prisma.analysisJob.findFirst({
         where: { id: input.id, creatorId: ctx.user.id },
         include: {
-          images: { orderBy: { createdAt: 'asc' } },
+          images: {
+            orderBy: { createdAt: 'asc' },
+            include: {
+              result: {
+                include: {
+                  methods: true,
+                  graphs: {
+                    include: {
+                      points: { orderBy: { idx: 'asc' } },
+                    },
+                  },
+                },
+              },
+            },
+          },
           creator: { select: { email: true, name: true } },
         },
       })
