@@ -151,7 +151,23 @@ function JobDetail() {
                   </p>
                 )}
                 {job.images.map((image) => (
-                  <ImageRow key={image.id} path={image.storagePath}>
+                  <div
+                    key={image.id}
+                    className="flex items-center gap-3 rounded-md border p-3"
+                  >
+                    <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
+                      {image.previewUrl ? (
+                        <img
+                          src={image.previewUrl}
+                          alt={image.filename}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-muted-foreground text-xs">
+                          …
+                        </span>
+                      )}
+                    </div>
                     <div className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate text-sm font-medium">
                         {image.filename}
@@ -161,7 +177,17 @@ function JobDetail() {
                         {formatDate(image.createdAt)}
                       </span>
                     </div>
-                  </ImageRow>
+                    {image.previewUrl && (
+                      <a
+                        href={image.previewUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm underline"
+                      >
+                        Open
+                      </a>
+                    )}
+                  </div>
                 ))}
               </CardContent>
             </Card>
@@ -172,34 +198,3 @@ function JobDetail() {
   )
 }
 
-function ImageRow({
-  path,
-  children,
-}: {
-  path: string
-  children: React.ReactNode
-}) {
-  const signed = trpc.bytemaps.getSignedUrl.useQuery({ path })
-
-  return (
-    <div className="flex items-center gap-3 rounded-md border p-3">
-      {children}
-      {signed.isLoading && (
-        <span className="text-muted-foreground text-xs">…</span>
-      )}
-      {signed.data && (
-        <a
-          href={signed.data.url}
-          target="_blank"
-          rel="noreferrer"
-          className="text-sm underline"
-        >
-          Open
-        </a>
-      )}
-      {signed.isError && (
-        <span className="text-destructive text-xs">failed</span>
-      )}
-    </div>
-  )
-}

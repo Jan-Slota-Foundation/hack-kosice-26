@@ -2,7 +2,35 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { prisma } from '../lib/prisma.ts'
+import { supabaseAdmin } from '../lib/supabase.ts'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
+
+const BUCKET = 'bytemaps'
+const SIGNED_URL_TTL_SECONDS = 3600
+
+async function signPaths(paths: string[]): Promise<Map<string, string>> {
+  const map = new Map<string, string>()
+
+  if (paths.length === 0) return map
+
+  const { data, error } = await supabaseAdmin.storage
+    .from(BUCKET)
+    .createSignedUrls(paths, SIGNED_URL_TTL_SECONDS)
+
+  if (error) {
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: error.message,
+    })
+  }
+
+  for (const entry of data) {
+    if (entry.path && entry.signedUrl) {
+      map.set(entry.path, entry.signedUrl)
+    }
+  }
+  return map
+}
 
 export const analysisJobsRouter = createTRPCRouter({
   create: protectedProcedure
@@ -27,9 +55,29 @@ export const analysisJobsRouter = createTRPCRouter({
     const jobs = await prisma.analysisJob.findMany({
       where: { creatorId: ctx.user.id },
       orderBy: { createdAt: 'desc' },
-      include: { _count: { select: { images: true } } },
+      include: {
+        _count: { select: { images: true } },
+        images: {
+          orderBy: { createdAt: 'asc' },
+          take: 1,
+          select: { storagePath: true },
+        },
+      },
     })
-    return { jobs }
+
+    const previewPaths = jobs
+      .map((job) => job.images[0]?.storagePath)
+      .filter((path): path is string => Boolean(path))
+    const signed = await signPaths(previewPaths)
+
+    return {
+      jobs: jobs.map(({ images, ...job }) => ({
+        ...job,
+        previewUrl: images[0]
+          ? (signed.get(images[0].storagePath) ?? null)
+          : null,
+      })),
+    }
   }),
 
   getById: protectedProcedure
@@ -48,7 +96,14 @@ export const analysisJobsRouter = createTRPCRouter({
           message: `Analysis job not found`,
         })
       }
-      return { job }
+
+      const signed = await signPaths(job.images.map((img) => img.storagePath))
+      const images = job.images.map((img) => ({
+        ...img,
+        previewUrl: signed.get(img.storagePath) ?? null,
+      }))
+
+      return { job: { ...job, images } }
     }),
 
   markFinished: protectedProcedure
