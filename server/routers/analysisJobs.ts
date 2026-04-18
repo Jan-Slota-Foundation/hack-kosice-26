@@ -118,4 +118,32 @@ export const analysisJobsRouter = createTRPCRouter({
       }
       return { ok: true }
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.uuid() }))
+    .mutation(async ({ input, ctx }) => {
+      const job = await prisma.analysisJob.findFirst({
+        where: { id: input.id, creatorId: ctx.user.id },
+        include: { images: { select: { storagePath: true } } },
+      })
+      if (!job) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const paths = job.images.map((img) => img.storagePath)
+      if (paths.length > 0) {
+        const { error } = await supabaseAdmin.storage
+          .from(BUCKET)
+          .remove(paths)
+        if (error) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: error.message,
+          })
+        }
+      }
+
+      await prisma.analysisJob.delete({ where: { id: job.id } })
+      return { ok: true }
+    }),
 })

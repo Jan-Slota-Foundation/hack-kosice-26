@@ -1,6 +1,6 @@
 import { PageLayout } from '@/components/page-layout'
 import { Badge } from '@/components/ui/badge'
-import { buttonVariants } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/card'
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { Trash2 } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/jobs/')({
   component: JobsIndex,
@@ -33,7 +34,27 @@ function formatDate(date: Date | string | null | undefined) {
 
 function JobsIndex() {
   const jobs = trpc.analysisJobs.list.useQuery()
+  const utils = trpc.useUtils()
+  const deleteJob = trpc.analysisJobs.delete.useMutation({
+    onSuccess: async () => {
+      await utils.analysisJobs.list.invalidate()
+    },
+  })
   const items = jobs.data?.jobs ?? []
+
+  const handleDelete = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    jobId: string,
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (
+      !confirm('Delete this analysis and all its files? This cannot be undone.')
+    ) {
+      return
+    }
+    deleteJob.mutate({ id: jobId })
+  }
 
   return (
     <PageLayout
@@ -65,15 +86,17 @@ function JobsIndex() {
         )}
 
         {items.map((job) => (
-          <Link
+          <Card
             key={job.id}
-            to="/jobs/$jobId"
-            params={{ jobId: job.id }}
-            className="block"
+            className="hover:bg-accent/30 relative transition-colors"
           >
-            <Card className="hover:bg-accent/30 transition-colors">
+            <Link
+              to="/jobs/$jobId"
+              params={{ jobId: job.id }}
+              className="block"
+            >
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 pr-10">
                   <span className="truncate">{job.name}</span>
                   <Badge variant={statusVariant(job.status)}>
                     {job.status.toLowerCase()}
@@ -88,8 +111,22 @@ function JobsIndex() {
                     : ''}
                 </CardDescription>
               </CardHeader>
-            </Card>
-          </Link>
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Delete analysis"
+              className="text-muted-foreground hover:text-destructive absolute top-3 right-3"
+              disabled={
+                deleteJob.isPending && deleteJob.variables.id === job.id
+              }
+              onClick={(e) => {
+                handleDelete(e, job.id)
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </Card>
         ))}
       </div>
     </PageLayout>

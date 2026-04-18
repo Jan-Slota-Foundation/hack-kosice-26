@@ -1,3 +1,4 @@
+import { AfmSurfaceViewer } from '@/components/afm-surface-viewer'
 import { PageLayout } from '@/components/page-layout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,7 @@ import {
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { File as FileIcon } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/jobs/$jobId')({
@@ -44,8 +46,26 @@ function JobDetail() {
   const { jobId } = Route.useParams()
   const navigate = useNavigate()
   const utils = trpc.useUtils()
+  const [overrides, setOverrides] = useState<Map<string, boolean>>(new Map())
 
   const jobQuery = trpc.analysisJobs.getById.useQuery({ id: jobId })
+  const firstImageId = jobQuery.data?.job.images[0]?.id ?? null
+
+  const isExpanded = (imageId: string): boolean => {
+    const override = overrides.get(imageId)
+    if (override !== undefined) return override
+    return imageId === firstImageId
+  }
+  const toggleExpanded = (imageId: string) => {
+    setOverrides((prev) => {
+      const next = new Map(prev)
+      const current = prev.get(imageId)
+      const defaultOpen = imageId === firstImageId
+      const currentlyOpen = current ?? defaultOpen
+      next.set(imageId, !currentlyOpen)
+      return next
+    })
+  }
   const markFinished = trpc.analysisJobs.markFinished.useMutation({
     onSuccess: async () => {
       await utils.analysisJobs.getById.invalidate({ id: jobId })
@@ -151,35 +171,53 @@ function JobDetail() {
                     No files attached to this job.
                   </p>
                 )}
-                {job.images.map((image) => (
-                  <div
-                    key={image.id}
-                    className="flex items-center gap-3 rounded-md border p-3"
-                  >
-                    <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
-                      <FileIcon className="text-muted-foreground size-8" />
+                {job.images.map((image) => {
+                  const isOpen = isExpanded(image.id)
+                  return (
+                    <div
+                      key={image.id}
+                      className="flex flex-col gap-3 rounded-md border p-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="bg-muted flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border">
+                          <FileIcon className="text-muted-foreground size-8" />
+                        </div>
+                        <div className="flex min-w-0 flex-1 flex-col">
+                          <span className="truncate text-sm font-medium">
+                            {image.filename}
+                          </span>
+                          <span className="text-muted-foreground text-xs">
+                            {formatBytes(image.sizeBytes)} ·{' '}
+                            {formatDate(image.createdAt)}
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            toggleExpanded(image.id)
+                          }}
+                        >
+                          {isOpen ? 'Hide 3D' : 'View 3D'}
+                        </Button>
+                        {image.downloadUrl && (
+                          <a
+                            href={image.downloadUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm underline"
+                          >
+                            Download
+                          </a>
+                        )}
+                      </div>
+                      {isOpen && (
+                        <AfmSurfaceViewer rawImageId={image.id} />
+                      )}
                     </div>
-                    <div className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate text-sm font-medium">
-                        {image.filename}
-                      </span>
-                      <span className="text-muted-foreground text-xs">
-                        {formatBytes(image.sizeBytes)} ·{' '}
-                        {formatDate(image.createdAt)}
-                      </span>
-                    </div>
-                    {image.downloadUrl && (
-                      <a
-                        href={image.downloadUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-sm underline"
-                      >
-                        Download
-                      </a>
-                    )}
-                  </div>
-                ))}
+                  )
+                })}
               </CardContent>
             </Card>
           </>

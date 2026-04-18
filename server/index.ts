@@ -6,9 +6,12 @@ import express from 'express'
 
 import { env } from './lib/env'
 import { appRouter } from './router'
+import { heightmapRouter } from './routes/heightmap'
 import { createContext } from './trpc'
 
 const app = express()
+
+app.use('/api/heightmap', heightmapRouter)
 
 app.use(
   '/trpc',
