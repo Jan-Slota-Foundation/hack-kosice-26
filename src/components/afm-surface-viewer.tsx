@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import { GradientCard } from '@/components/ui/gradient-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Slider } from '@/components/ui/slider'
@@ -7,7 +8,15 @@ import { Plot } from '@/lib/plotly'
 import { supabase } from '@/lib/supabase'
 import { trpc } from '@/lib/trpc'
 import { useQueries } from '@tanstack/react-query'
-import { Suspense, useMemo, useState } from 'react'
+import { Download } from 'lucide-react'
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 interface AfmSurfaceViewerProps {
   rawImageId: string
@@ -100,6 +109,38 @@ export function AfmSurfaceViewer({
   const activeChannel = selectedChannel ?? initialChannel
   const [zExagLive, setZExagLive] = useState(DEFAULT_Z_EXAG)
   const [zExagCommitted, setZExagCommitted] = useState(DEFAULT_Z_EXAG)
+  const graphDivRef = useRef<HTMLElement | null>(null)
+  const [isDownloading, setIsDownloading] = useState(false)
+
+  const handlePlotInitialized = useCallback((_figure: unknown, gd: HTMLElement) => {
+    graphDivRef.current = gd
+  }, [])
+
+  const handleDownloadPng = useCallback(async () => {
+    const gd = graphDivRef.current
+    if (!gd) return
+    setIsDownloading(true)
+    try {
+      const plotlyMod: unknown = await import('plotly.js-dist-min')
+      const Plotly =
+        plotlyMod && typeof plotlyMod === 'object' && 'default' in plotlyMod
+          ? (plotlyMod as { default: unknown }).default
+          : plotlyMod
+      const downloadImage = (Plotly as { downloadImage: (gd: HTMLElement, opts: Record<string, unknown>) => Promise<string> }).downloadImage
+      const filename = activeMeta ? activeMeta.name.replace(/\s+/g, '_') : 'afm-surface'
+      await downloadImage(gd, {
+        format: 'png',
+        filename,
+        width: gd.clientWidth || 1200,
+        height: gd.clientHeight || 900,
+        scale: 2,
+      })
+    } finally {
+      setIsDownloading(false)
+    }
+  // activeMeta is read inside; include via closure dep
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const channelQueries = useQueries({
     queries: channelMetas.map((c) => ({
@@ -172,12 +213,15 @@ export function AfmSurfaceViewer({
     return [trace as any]
   }, [zData, activeMeta, xValues, yValues])
 
+  const initialZAspectRef = useRef(visualMultiplier)
+
   const plotLayout = useMemo(() => {
     return {
       autosize: true,
       margin: { l: 0, r: 0, t: 0, b: 0 },
       paper_bgcolor: 'rgba(0,0,0,0)',
       plot_bgcolor: 'rgba(0,0,0,0)',
+      uirevision: rawImageId,
       hoverlabel: {
         bgcolor: 'rgba(15,15,20,0.92)',
         bordercolor: 'rgba(255,255,255,0.15)',
@@ -190,9 +234,10 @@ export function AfmSurfaceViewer({
       },
       scene: {
         bgcolor: 'rgba(0,0,0,0)',
+        uirevision: rawImageId,
         camera: { eye: { x: 1.6, y: 1.6, z: 1.2 } },
         aspectmode: 'manual' as const,
-        aspectratio: { x: 1, y: 1, z: visualMultiplier },
+        aspectratio: { x: 1, y: 1, z: initialZAspectRef.current },
         xaxis: {
           range: [0, widthUm],
           showbackground: false,
@@ -224,7 +269,33 @@ export function AfmSurfaceViewer({
         },
       },
     }
-  }, [widthUm, heightUm, visualMultiplier])
+  }, [widthUm, heightUm, rawImageId])
+
+  useEffect(() => {
+    const gd = graphDivRef.current
+    if (!gd) return
+    const state = { cancelled: false }
+    void (async () => {
+      const plotlyMod: unknown = await import('plotly.js-dist-min')
+      if (state.cancelled) return
+      const Plotly =
+        plotlyMod && typeof plotlyMod === 'object' && 'default' in plotlyMod
+          ? (plotlyMod as { default: unknown }).default
+          : plotlyMod
+      const relayout = (
+        Plotly as {
+          relayout: (
+            gd: HTMLElement,
+            update: Record<string, unknown>,
+          ) => Promise<unknown>
+        }
+      ).relayout
+      await relayout(gd, { 'scene.aspectratio.z': visualMultiplier })
+    })()
+    return () => {
+      state.cancelled = true
+    }
+  }, [visualMultiplier])
 
   const plotConfig = useMemo(
     () => ({
@@ -285,6 +356,7 @@ export function AfmSurfaceViewer({
               config={plotConfig}
               useResizeHandler
               style={plotStyle}
+              onInitialized={handlePlotInitialized}
             />
           </Suspense>
         ) : null}
@@ -352,6 +424,22 @@ export function AfmSurfaceViewer({
           </div>
         )}
       </div>
+
+      {plotData && (
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            void handleDownloadPng()
+          }}
+          disabled={isDownloading}
+          className="bg-card/85 absolute bottom-3 left-3 z-10 shadow-md backdrop-blur-sm"
+        >
+          <Download className="size-4" />
+          {isDownloading ? 'Saving…' : 'PNG'}
+        </Button>
+      )}
     </GradientCard>
   )
 }

@@ -20,7 +20,6 @@ import {
 import { trpc } from '@/lib/trpc'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/jobs/$jobId')({
   component: JobDetail,
@@ -52,35 +51,13 @@ function formatBytes(bytes: number | null | undefined) {
 function JobDetail() {
   const { jobId } = Route.useParams()
   const navigate = useNavigate()
-  const utils = trpc.useUtils()
   const [selectedOverride, setSelectedOverride] = useState<string | null>(null)
 
   const jobQuery = trpc.analysisJobs.getById.useQuery({ id: jobId })
   const firstImageId = jobQuery.data?.job.images[0]?.id ?? null
   const selectedImageId = selectedOverride ?? firstImageId
-  const markFinished = trpc.analysisJobs.markFinished.useMutation({
-    onSuccess: async () => {
-      await utils.analysisJobs.getById.invalidate({ id: jobId })
-      await utils.analysisJobs.list.invalidate()
-      toast.success('Marked as finished')
-    },
-    onError: (err) => {
-      toast.error(err.message)
-    },
-  })
-  const markError = trpc.analysisJobs.markError.useMutation({
-    onSuccess: async () => {
-      await utils.analysisJobs.getById.invalidate({ id: jobId })
-      await utils.analysisJobs.list.invalidate()
-      toast.success('Marked as error')
-    },
-    onError: (err) => {
-      toast.error(err.message)
-    },
-  })
 
   const job = jobQuery.data?.job
-  const isDev = import.meta.env.DEV
   const title = job?.name ?? 'Analysis job'
 
   const actions = job ? (
@@ -89,12 +66,20 @@ function JobDetail() {
     </Badge>
   ) : null
 
+  const middle = job ? (
+    <span className="text-muted-foreground truncate text-xs">
+      Created by {job.creator.name} · {formatDate(job.createdAt)}
+      {job.finishedAt ? ` · finished ${formatDate(job.finishedAt) ?? ''}` : ''}
+    </span>
+  ) : null
+
   return (
     <PageLayout
       title={title}
       onBack={() => {
         void navigate({ to: '/jobs' })
       }}
+      middle={middle}
       actions={actions}
     >
       <div className="flex h-full min-h-0 flex-col gap-4">
@@ -114,52 +99,11 @@ function JobDetail() {
             </div>
 
             <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-              <Card>
-                <CardHeader>
-                  <CardDescription>
-                    Created by {job.creator.name} · {formatDate(job.createdAt)}
-                    {job.finishedAt
-                      ? ` · finished ${formatDate(job.finishedAt) ?? ''}`
-                      : ''}
-                  </CardDescription>
-                </CardHeader>
-                {job.error && (
-                  <CardContent>
-                    <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
-                      <span className="font-medium">Error:</span> {job.error}
-                    </div>
-                  </CardContent>
-                )}
-                {isDev && (
-                  <CardContent className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={markFinished.isPending}
-                      onClick={() => {
-                        markFinished.mutate({ id: jobId })
-                      }}
-                    >
-                      Mark finished (dev)
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={markError.isPending}
-                      onClick={() => {
-                        markError.mutate({
-                          id: jobId,
-                          message: 'Manually marked as error from UI',
-                        })
-                      }}
-                    >
-                      Mark as error (dev)
-                    </Button>
-                  </CardContent>
-                )}
-              </Card>
+              {job.error && (
+                <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
+                  <span className="font-medium">Error:</span> {job.error}
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 {[1, 2, 3, 4].map((i) => (
