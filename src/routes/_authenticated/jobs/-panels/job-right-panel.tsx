@@ -1,6 +1,5 @@
-import { Download } from 'lucide-react'
-
 import { HeightDistributionChart } from '@/components/height-distribution-chart'
+import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Card,
@@ -24,6 +23,7 @@ import {
   GradientCardTitle,
 } from '@/components/ui/gradient-card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Download } from 'lucide-react'
 
 import { useJobDetail } from '../-job-detail-context'
 import { ChartsGridSkeleton, FilesListSkeleton } from './skeletons'
@@ -39,6 +39,27 @@ function formatBytes(bytes: number | null | undefined) {
   if (bytes < 1024) return `${bytes.toString()} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+}
+
+const MOCK_DIAGNOSES: { diagnosis: string; confidence: number }[] = [
+  { diagnosis: "Parkinson's Disease", confidence: 0.87 },
+  { diagnosis: "Alzheimer's Disease", confidence: 0.74 },
+  { diagnosis: 'Healthy Tissue', confidence: 0.93 },
+  { diagnosis: 'Amyloid Aggregation', confidence: 0.68 },
+  { diagnosis: 'Huntington’s Disease', confidence: 0.81 },
+]
+
+function mockResultForImage(imageId: string | null): {
+  diagnosis: string
+  confidence: number
+} {
+  if (!imageId) return MOCK_DIAGNOSES[0]
+  let hash = 0
+  for (let i = 0; i < imageId.length; i++) {
+    hash = (hash * 31 + imageId.charCodeAt(i)) | 0
+  }
+  const idx = Math.abs(hash) % MOCK_DIAGNOSES.length
+  return MOCK_DIAGNOSES[idx]
 }
 
 export function JobRightPanel() {
@@ -75,6 +96,10 @@ export function JobRightPanel() {
 
   if (!job) return null
 
+  const { diagnosis: mockDiagnosis, confidence: mockConfidence } =
+    mockResultForImage(selectedImageId)
+  const confidencePct = Math.round(mockConfidence * 100)
+
   return (
     <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
       {job.error && (
@@ -82,6 +107,34 @@ export function JobRightPanel() {
           <span className="font-medium">Error:</span> {job.error}
         </div>
       )}
+
+      <GradientCard className="w-full">
+        <GradientCardHeader className="gap-1">
+          <GradientCardDescription className="text-[10px] font-medium tracking-[0.14em] uppercase">
+            Predicted diagnosis
+          </GradientCardDescription>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <GradientCardTitle className="text-2xl font-semibold tracking-tight">
+              {mockDiagnosis}
+            </GradientCardTitle>
+            <Badge variant="secondary" className="text-xs font-medium">
+              {confidencePct.toString()}% confidence
+            </Badge>
+          </div>
+        </GradientCardHeader>
+        <GradientCardContent>
+          <div className="flex items-center justify-between text-[11px] font-medium">
+            <span className="text-muted-foreground">Model confidence</span>
+            <span className="tabular-nums">{confidencePct.toString()}%</span>
+          </div>
+          <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
+            <div
+              className="bg-primary h-full rounded-full transition-all"
+              style={{ width: `${confidencePct.toString()}%` }}
+            />
+          </div>
+        </GradientCardContent>
+      </GradientCard>
 
       <Card className="w-full">
         <CardHeader>
