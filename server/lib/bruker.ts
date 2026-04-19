@@ -119,7 +119,7 @@ function parseImageDataName(value: string | null): string | null {
 
 function unitForChannel(name: string): BrukerChannelUnit {
   const lower = name.toLowerCase()
-  if (lower.includes('height')) return 'nm'
+  if (lower.includes('height') || lower.includes('zsensor') || lower.includes('z sensor')) return 'nm'
   if (lower.includes('phase')) return 'deg'
   if (lower.includes('amplitude') || lower.includes('error') || lower.includes('deflection')) return 'V'
   return 'unknown'

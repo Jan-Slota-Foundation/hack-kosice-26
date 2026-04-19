@@ -29,11 +29,14 @@ export function JobHeader({ children }: { children: ReactNode }) {
   const title = job?.name ?? 'Analysis job'
 
   const actions = job ? (
-    <Badge variant={statusVariant(job.status)}>
+    <Badge
+      variant={statusVariant(job.status)}
+      className="h-7 px-3 text-xs"
+    >
       {job.status.toLowerCase()}
     </Badge>
   ) : jobQuery.isLoading ? (
-    <Skeleton className="h-6 w-20 rounded-full" />
+    <Skeleton className="h-7 w-24 rounded-full" />
   ) : null
 
   const middle = job ? (

@@ -255,7 +255,7 @@ export function JobRightPanel() {
           <CardTitle>Analysis</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <ClassificationTasks value={result?.diagnosis_detail} />
+          <ClassificationTasks value={result?.methods} />
 
           <Carousel opts={{ align: 'start' }} className="w-full">
             <div className="mb-2 flex items-center justify-end gap-2">

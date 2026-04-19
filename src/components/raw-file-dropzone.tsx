@@ -11,6 +11,8 @@ import { useRef, useState } from 'react'
 
 export type UploadStatus = 'pending' | 'uploading' | 'done' | 'failed'
 
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024
+
 interface RawFileDropzoneProps {
   files: File[]
   onFilesChange: (files: File[]) => void
@@ -62,11 +64,22 @@ export function RawFileDropzone({
 }: RawFileDropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [rejectedNames, setRejectedNames] = useState<string[]>([])
 
   const addFiles = (incoming: FileList | File[]) => {
     const list = Array.from(incoming)
-    if (list.length > 0) {
-      onFilesChange([...files, ...list])
+    const accepted: File[] = []
+    const rejected: string[] = []
+    for (const file of list) {
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        rejected.push(file.name)
+      } else {
+        accepted.push(file)
+      }
+    }
+    setRejectedNames(rejected)
+    if (accepted.length > 0) {
+      onFilesChange([...files, ...accepted])
     }
   }
 
@@ -142,6 +155,15 @@ export function RawFileDropzone({
           onChange={handleChange}
         />
       </div>
+
+      {rejectedNames.length > 0 && (
+        <p className="text-destructive text-xs">
+          {rejectedNames.length === 1
+            ? `"${rejectedNames[0]}" exceeds the 50 MB limit.`
+            : `${rejectedNames.length.toString()} files exceed the 50 MB limit.`}{' '}
+          Please consult the BE team to get your image processed c:
+        </p>
+      )}
 
       {files.length > 0 && (
         <div className="flex flex-col gap-2">
