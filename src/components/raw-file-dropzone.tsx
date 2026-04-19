@@ -65,19 +65,28 @@ export function RawFileDropzone({
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [rejectedNames, setRejectedNames] = useState<string[]>([])
+  const [rejectedBmpNames, setRejectedBmpNames] = useState<string[]>([])
 
   const addFiles = (incoming: FileList | File[]) => {
     const list = Array.from(incoming)
     const accepted: File[] = []
     const rejected: string[] = []
+    const rejectedBmp: string[] = []
     for (const file of list) {
-      if (file.size > MAX_FILE_SIZE_BYTES) {
+      const isBmp =
+        file.type === 'image/bmp' ||
+        file.type === 'image/x-ms-bmp' ||
+        file.name.toLowerCase().endsWith('.bmp')
+      if (isBmp) {
+        rejectedBmp.push(file.name)
+      } else if (file.size > MAX_FILE_SIZE_BYTES) {
         rejected.push(file.name)
       } else {
         accepted.push(file)
       }
     }
     setRejectedNames(rejected)
+    setRejectedBmpNames(rejectedBmp)
     if (accepted.length > 0) {
       onFilesChange([...files, ...accepted])
     }
@@ -155,6 +164,14 @@ export function RawFileDropzone({
           onChange={handleChange}
         />
       </div>
+
+      {rejectedBmpNames.length > 0 && (
+        <p className="text-destructive text-xs">
+          {rejectedBmpNames.length === 1
+            ? `"${rejectedBmpNames[0]}" is a BMP file and is not supported.`
+            : `${rejectedBmpNames.length.toString()} BMP files are not supported.`}
+        </p>
+      )}
 
       {rejectedNames.length > 0 && (
         <p className="text-destructive text-xs">
