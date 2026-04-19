@@ -7,6 +7,7 @@ import { PageLayout } from '@/components/page-layout'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { useAuth } from '@/lib/auth-context'
+import { supabase } from '@/lib/supabase'
 import { trpc } from '@/lib/trpc'
 import { cn } from '@/lib/utils'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
@@ -43,7 +44,9 @@ function UploadPage() {
   const effectivePatientId = isDoctor ? patientId : (user?.id ?? '')
 
   const createJob = trpc.analysisJobs.create.useMutation()
-  const uploadRaw = trpc.bytemaps.uploadRawToJob.useMutation()
+  const createSignedUploadUrl =
+    trpc.bytemaps.createSignedUploadUrl.useMutation()
+  const registerRawImage = trpc.bytemaps.registerRawImage.useMutation()
   const markError = trpc.analysisJobs.markError.useMutation()
 
   const trimmedName = name.trim()
@@ -96,14 +99,27 @@ function UploadPage() {
         let index = cursor++
         while (index < total) {
           const file = files[index]
+          const contentType = file.type || 'application/octet-stream'
           setStatusAt(index, 'uploading')
           try {
-            const buffer = await file.arrayBuffer()
-            await uploadRaw.mutateAsync({
+            const { bucket, path, token } =
+              await createSignedUploadUrl.mutateAsync({
+                jobId,
+                filename: file.name,
+              })
+            const { error } = await supabase.storage
+              .from(bucket)
+              .uploadToSignedUrl(path, token, file, {
+                contentType,
+                upsert: false,
+              })
+            if (error) throw error
+            await registerRawImage.mutateAsync({
               jobId,
+              storagePath: path,
               filename: file.name,
-              contentType: file.type || 'application/octet-stream',
-              data: new Uint8Array(buffer),
+              contentType,
+              sizeBytes: file.size,
             })
             setStatusAt(index, 'done')
           } catch (err) {
@@ -150,9 +166,10 @@ function UploadPage() {
   }
 
   return (
-    <PageLayout title="New analysis job">
-      <form
-        className="mx-auto flex max-w-4xl flex-col gap-4"
+    <div className="flex flex-1 flex-col bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_60%),linear-gradient(to_bottom_right,rgba(99,102,241,0.05),transparent_70%)]">
+      <PageLayout title="New analysis job">
+        <form
+          className="mx-auto flex w-full max-w-4xl flex-col gap-4"
         onSubmit={(e) => {
           void handleSubmit(e)
         }}
@@ -209,7 +226,8 @@ function UploadPage() {
             {isUploading ? 'Uploading…' : 'Create analysis job'}
           </Button>
         </div>
-      </form>
-    </PageLayout>
+        </form>
+      </PageLayout>
+    </div>
   )
 }

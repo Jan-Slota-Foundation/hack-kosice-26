@@ -8,13 +8,11 @@ import { createTRPCRouter, protectedProcedure } from '../trpc'
 const BUCKET = 'bytemaps'
 
 export const bytemapRouter = createTRPCRouter({
-  uploadRawToJob: protectedProcedure
+  createSignedUploadUrl: protectedProcedure
     .input(
       z.object({
         jobId: z.uuid(),
         filename: z.string().min(1),
-        contentType: z.string().default('application/octet-stream'),
-        data: z.instanceof(Uint8Array),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -34,16 +32,51 @@ export const bytemapRouter = createTRPCRouter({
 
       const { data, error } = await supabaseAdmin.storage
         .from(BUCKET)
-        .upload(path, input.data, {
-          contentType: input.contentType,
-          upsert: false,
-        })
+        .createSignedUploadUrl(path)
 
       if (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: `Failed to upload ${input.filename}: ${error.message}`,
+          message: `Failed to create upload URL for ${input.filename}: ${error.message}`,
           cause: error,
+        })
+      }
+
+      return {
+        bucket: BUCKET,
+        path: data.path,
+        token: data.token,
+        signedUrl: data.signedUrl,
+      }
+    }),
+
+  registerRawImage: protectedProcedure
+    .input(
+      z.object({
+        jobId: z.uuid(),
+        storagePath: z.string().min(1),
+        filename: z.string().min(1),
+        contentType: z.string().default('application/octet-stream'),
+        sizeBytes: z.number().int().nonnegative(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const job = await prisma.analysisJob.findFirst({
+        where: { id: input.jobId, creatorId: ctx.user.id },
+        select: { id: true, patientId: true },
+      })
+      if (!job) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Analysis job not found',
+        })
+      }
+
+      const expectedPrefix = `raw/${job.patientId}/`
+      if (!input.storagePath.startsWith(expectedPrefix)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'storagePath does not belong to this job',
         })
       }
 
@@ -51,8 +84,8 @@ export const bytemapRouter = createTRPCRouter({
         data: {
           filename: input.filename,
           contentType: input.contentType,
-          storagePath: data.path,
-          sizeBytes: input.data.byteLength,
+          storagePath: input.storagePath,
+          sizeBytes: input.sizeBytes,
           userId: job.patientId,
           jobId: input.jobId,
         },

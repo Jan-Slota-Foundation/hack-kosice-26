@@ -10,7 +10,13 @@ export const rawImagesRouter = createTRPCRouter({
     .input(z.object({ rawImageId: z.uuid() }))
     .query(async ({ input, ctx }) => {
       const image = await prisma.rawImage.findFirst({
-        where: { id: input.rawImageId, userId: ctx.user.id },
+        where: {
+          id: input.rawImageId,
+          OR: [
+            { userId: ctx.user.id },
+            { job: { creatorId: ctx.user.id } },
+          ],
+        },
         select: { id: true, filename: true },
       })
       if (!image) {
