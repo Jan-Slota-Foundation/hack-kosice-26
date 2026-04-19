@@ -8,7 +8,7 @@ import { Plot } from '@/lib/plotly'
 import { supabase } from '@/lib/supabase'
 import { trpc } from '@/lib/trpc'
 import { useQueries } from '@tanstack/react-query'
-import { Download } from 'lucide-react'
+import { Download, Loader2 } from 'lucide-react'
 import {
   Suspense,
   useCallback,
@@ -31,6 +31,29 @@ interface ChannelPixels {
 
 const DEFAULT_CHANNEL = 'Height Sensor'
 const DEFAULT_Z_EXAG = 50
+
+const REVEAL_DURATION_MS = 900
+const REVEAL_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)'
+
+interface PlotlyLike {
+  relayout: (
+    gd: HTMLElement,
+    update: Record<string, unknown>,
+  ) => Promise<unknown>
+  downloadImage: (
+    gd: HTMLElement,
+    opts: Record<string, unknown>,
+  ) => Promise<string>
+}
+
+async function loadPlotly(): Promise<PlotlyLike> {
+  const mod: unknown = await import('plotly.js-dist-min')
+  const plotly =
+    mod && typeof mod === 'object' && 'default' in mod
+      ? (mod as { default: unknown }).default
+      : mod
+  return plotly as PlotlyLike
+}
 
 async function fetchChannelPixels(
   rawImageId: string,
@@ -111,10 +134,17 @@ export function AfmSurfaceViewer({
   const [zExagCommitted, setZExagCommitted] = useState(DEFAULT_Z_EXAG)
   const graphDivRef = useRef<HTMLElement | null>(null)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [revealed, setRevealed] = useState(false)
 
   const handlePlotInitialized = useCallback(
     (_figure: unknown, gd: HTMLElement) => {
       graphDivRef.current = gd
+      // Wait one frame so plotly's first paint lands before we start the
+      // transition — otherwise the wrapper animates while the canvas is still
+      // blank and the plot pops in mid-transition.
+      requestAnimationFrame(() => {
+        setRevealed(true)
+      })
     },
     [],
   )
@@ -124,23 +154,11 @@ export function AfmSurfaceViewer({
     if (!gd) return
     setIsDownloading(true)
     try {
-      const plotlyMod: unknown = await import('plotly.js-dist-min')
-      const Plotly =
-        plotlyMod && typeof plotlyMod === 'object' && 'default' in plotlyMod
-          ? (plotlyMod as { default: unknown }).default
-          : plotlyMod
-      const downloadImage = (
-        Plotly as {
-          downloadImage: (
-            gd: HTMLElement,
-            opts: Record<string, unknown>,
-          ) => Promise<string>
-        }
-      ).downloadImage
+      const Plotly = await loadPlotly()
       const filename = activeMeta
         ? activeMeta.name.replace(/\s+/g, '_')
         : 'afm-surface'
-      await downloadImage(gd, {
+      await Plotly.downloadImage(gd, {
         format: 'png',
         filename,
         width: gd.clientWidth || 1200,
@@ -288,21 +306,9 @@ export function AfmSurfaceViewer({
     if (!gd) return
     const state = { cancelled: false }
     void (async () => {
-      const plotlyMod: unknown = await import('plotly.js-dist-min')
+      const Plotly = await loadPlotly()
       if (state.cancelled) return
-      const Plotly =
-        plotlyMod && typeof plotlyMod === 'object' && 'default' in plotlyMod
-          ? (plotlyMod as { default: unknown }).default
-          : plotlyMod
-      const relayout = (
-        Plotly as {
-          relayout: (
-            gd: HTMLElement,
-            update: Record<string, unknown>,
-          ) => Promise<unknown>
-        }
-      ).relayout
-      await relayout(gd, { 'scene.aspectratio.z': visualMultiplier })
+      await Plotly.relayout(gd, { 'scene.aspectratio.z': visualMultiplier })
     })()
     return () => {
       state.cancelled = true
@@ -319,6 +325,22 @@ export function AfmSurfaceViewer({
   )
 
   const plotStyle = useMemo(() => ({ width: '100%', height: '100%' }), [])
+
+  const revealStyle = useMemo<React.CSSProperties>(
+    () => ({
+      opacity: revealed ? 1 : 0,
+      transform: revealed
+        ? 'translateY(0) scale(1)'
+        : 'translateY(-40px) scale(0.94)',
+      transformOrigin: 'center top',
+      filter: revealed ? 'blur(0)' : 'blur(8px)',
+      transition: `opacity ${REVEAL_DURATION_MS.toString()}ms ${REVEAL_EASING}, transform ${REVEAL_DURATION_MS.toString()}ms ${REVEAL_EASING}, filter ${(REVEAL_DURATION_MS * 0.7).toFixed(0)}ms ${REVEAL_EASING}`,
+      willChange: 'opacity, transform, filter',
+      width: '100%',
+      height: '100%',
+    }),
+    [revealed],
+  )
 
   if (metaQuery.isLoading) {
     return (
@@ -354,21 +376,21 @@ export function AfmSurfaceViewer({
         ) : plotData && activeMeta ? (
           <Suspense
             fallback={
-              <div className="flex h-full items-center justify-center">
-                <p className="text-muted-foreground text-sm">
-                  Loading 3D engine…
-                </p>
+              <div className="flex h-full w-full items-center justify-center">
+                <Loader2 className="text-muted-foreground size-8 animate-spin" />
               </div>
             }
           >
-            <Plot
-              data={plotData}
-              layout={plotLayout}
-              config={plotConfig}
-              useResizeHandler
-              style={plotStyle}
-              onInitialized={handlePlotInitialized}
-            />
+            <div style={revealStyle}>
+              <Plot
+                data={plotData}
+                layout={plotLayout}
+                config={plotConfig}
+                useResizeHandler
+                style={plotStyle}
+                onInitialized={handlePlotInitialized}
+              />
+            </div>
           </Suspense>
         ) : null}
       </div>

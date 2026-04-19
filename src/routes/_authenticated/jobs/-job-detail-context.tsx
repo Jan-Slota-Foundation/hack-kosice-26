@@ -53,9 +53,7 @@ export function JobDetailProvider({
     const selectedImageId = urlImageExists ? imageIdFromUrl : firstImageId
 
     const selectedImage =
-      selectedImageId !== null
-        ? (images.find((img) => img.id === selectedImageId) ?? null)
-        : null
+      images.find((img) => img.id === selectedImageId) ?? null
 
     return {
       jobId,
