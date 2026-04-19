@@ -23,7 +23,11 @@ import { useEffect, useState } from 'react'
 
 import { useJobDetail } from '../-job-detail-context'
 import { ClassificationTasks } from './classification-tasks'
-import { ChartsGridSkeleton, DiagnosisSkeleton } from './skeletons'
+import {
+  ChartsGridSkeleton,
+  ClassificationTasksSkeleton,
+  DiagnosisSkeleton,
+} from './skeletons'
 
 function formatBytes(bytes: number | null | undefined) {
   if (bytes == null) return ''
@@ -214,7 +218,8 @@ export function JobRightPanel() {
           <CardHeader className="gap-2">
             <Skeleton className="h-5 w-32" />
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
+          <CardContent className="flex flex-col gap-6">
+            <ClassificationTasksSkeleton />
             <ChartsGridSkeleton />
           </CardContent>
         </Card>
