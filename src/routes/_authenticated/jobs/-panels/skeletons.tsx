@@ -65,6 +65,31 @@ export function ChartsGridSkeleton() {
   )
 }
 
+export function ClassificationTasksSkeleton() {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-1">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-3 w-56" />
+      </div>
+      <div className="flex flex-col gap-2">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="flex flex-col gap-2 rounded-md border p-3"
+          >
+            <div className="flex items-baseline justify-between gap-2">
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-5 w-28 rounded-full" />
+            </div>
+            <Skeleton className="h-1.5 w-full rounded-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function FilesListSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-2">

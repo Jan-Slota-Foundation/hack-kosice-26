@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { useAuth } from '@/lib/auth-context'
+import { DEMO_DOCTOR_EMAIL, DEMO_DOCTOR_PASSWORD } from '@/lib/demo-doctor'
 import {
   createFileRoute,
   Link,
@@ -33,6 +34,15 @@ function Login() {
   const { redirect } = useSearch({ from: '/login' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const finishSignIn = async () => {
+    await router.invalidate()
+    if (redirect) {
+      router.history.push(redirect)
+    } else {
+      await router.navigate({ to: '/' })
+    }
+  }
+
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     const parsed = formSchema.safeParse(
@@ -52,12 +62,23 @@ function Login() {
       return
     }
 
-    await router.invalidate()
-    if (redirect) {
-      router.history.push(redirect)
-    } else {
-      await router.navigate({ to: '/' })
+    await finishSignIn()
+  }
+
+  const handleDemoSignIn = async () => {
+    setIsSubmitting(true)
+    const { error } = await auth.signIn({
+      email: DEMO_DOCTOR_EMAIL,
+      password: DEMO_DOCTOR_PASSWORD,
+    })
+    setIsSubmitting(false)
+
+    if (error) {
+      toast.error(error.message)
+      return
     }
+
+    await finishSignIn()
   }
 
   return (
@@ -88,6 +109,16 @@ function Login() {
                 />
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Signing in...' : 'Sign in'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    void handleDemoSignIn()
+                  }}
+                >
+                  Continue as demo doctor
                 </Button>
               </FieldSet>
             </FieldGroup>

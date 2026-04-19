@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { useAuth } from '@/lib/auth-context'
+import { DEMO_DOCTOR_EMAIL, DEMO_DOCTOR_PASSWORD } from '@/lib/demo-doctor'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -52,6 +53,23 @@ function Signup() {
     await router.navigate({ to: '/' })
   }
 
+  const handleDemoSignIn = async () => {
+    setIsSubmitting(true)
+    const { error } = await auth.signIn({
+      email: DEMO_DOCTOR_EMAIL,
+      password: DEMO_DOCTOR_PASSWORD,
+    })
+    setIsSubmitting(false)
+
+    if (error) {
+      toast.error(error.message)
+      return
+    }
+
+    await router.invalidate()
+    await router.navigate({ to: '/' })
+  }
+
   return (
     <div className="flex min-h-svh items-center justify-center bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_60%),linear-gradient(to_bottom_right,rgba(99,102,241,0.05),transparent_70%)] p-4">
       <Card className="w-full max-w-sm">
@@ -84,6 +102,16 @@ function Signup() {
 
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? 'Creating account...' : 'Create account'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    void handleDemoSignIn()
+                  }}
+                >
+                  Continue as demo doctor
                 </Button>
               </FieldSet>
             </FieldGroup>

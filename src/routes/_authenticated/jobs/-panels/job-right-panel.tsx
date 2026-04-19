@@ -258,9 +258,19 @@ export function JobRightPanel() {
           <ClassificationTasks value={result?.methods} />
 
           <Carousel opts={{ align: 'start' }} className="w-full">
-            <div className="mb-2 flex items-center justify-end gap-2">
-              <CarouselPrevious className="static translate-y-0" />
-              <CarouselNext className="static translate-y-0" />
+            <div className="mb-2 flex items-end justify-between gap-2">
+              <div className="flex flex-col">
+                <h3 className="text-sm font-semibold">
+                  Graphs ({(result?.graphs.length ?? 0).toString()})
+                </h3>
+                <p className="text-muted-foreground text-xs">
+                  Supportive Graphs
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <CarouselPrevious className="static translate-y-0" />
+                <CarouselNext className="static translate-y-0" />
+              </div>
             </div>
             <CarouselContent className="px-0.5 py-2">
               {(result?.graphs.length ? result.graphs : [null, null]).map(
