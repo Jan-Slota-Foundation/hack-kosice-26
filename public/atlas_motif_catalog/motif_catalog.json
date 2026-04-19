@@ -1,0 +1,1050 @@
+{
+  "atlas_root": "artifacts/pattern_atlas",
+  "motifs": [
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/large__c000.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/large__c000_card.png",
+      "cluster_id": "large__c000",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/large__c000/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/large__c000/consensus_variance.png",
+      "description": "large-scale motif with high-relief, high-roughness, high-contrast texture, dense branching/skeleton-like structure, and relatively strong fine-scale PSD content. Height distribution: positive-skew peaks, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 5,
+      "disease_overlap_patient_counts": {
+        "diabetes": 1,
+        "dry_eye": 1,
+        "healthy": 1,
+        "multiple_sclerosis": 2
+      },
+      "display_name": "large high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 1.0,
+        "fine_psd": 1.0,
+        "gradient": 1.0,
+        "height_range": 1.0,
+        "rms_roughness": 1.0,
+        "roughness": 1.0,
+        "skeleton_density": 1.0,
+        "texture_contrast": 1.0
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.36464375009139377,
+        "handcrafted.roughness_Sa": 0.7527679800987244,
+        "handcrafted.roughness_Sku": 19.65516601668464,
+        "handcrafted.roughness_Sq": 1.0786743958791096,
+        "handcrafted.roughness_Ssk": 2.303030831946267,
+        "handcrafted.roughness_Sz": 10.732724759313795,
+        "psd.psd_high_fraction": 0.008801019654330285,
+        "psd.psd_low_fraction": 0.876723997962493,
+        "texture.glcm_contrast": 2.615341208257842,
+        "topology.skeleton_junctions": 3628.222222222222,
+        "topology.skeleton_length_px": 18962.444444444445
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 5,
+      "n_samples": 5,
+      "n_tiles": 9,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/large__c000/prototype_panel.png",
+      "scale_name": "large",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c000.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c000_card.png",
+      "cluster_id": "medium__c000",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c000/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c000/consensus_variance.png",
+      "description": "medium-scale motif with high-relief, high-roughness, smooth-texture, sparse or compact structure, and mostly low-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 4,
+      "disease_overlap_patient_counts": {
+        "POAG": 2,
+        "healthy": 1,
+        "multiple_sclerosis": 1
+      },
+      "display_name": "medium high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.25,
+        "fine_psd": 0.25,
+        "gradient": 0.75,
+        "height_range": 1.0,
+        "rms_roughness": 1.0,
+        "roughness": 1.0,
+        "skeleton_density": 0.25,
+        "texture_contrast": 0.25
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.28684745196785244,
+        "handcrafted.roughness_Sa": 3.195124472890581,
+        "handcrafted.roughness_Sku": 2.0969638569014415,
+        "handcrafted.roughness_Sq": 3.7536193302699496,
+        "handcrafted.roughness_Ssk": 0.006216288864379749,
+        "handcrafted.roughness_Sz": 16.396338599068777,
+        "psd.psd_high_fraction": 5.878959445358992e-05,
+        "psd.psd_low_fraction": 0.9990124514282258,
+        "texture.glcm_contrast": 0.3308963389709672,
+        "topology.skeleton_junctions": 79.64285714285714,
+        "topology.skeleton_length_px": 1101.5
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 4,
+      "n_samples": 6,
+      "n_tiles": 14,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c000/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c002.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c002_card.png",
+      "cluster_id": "medium__c002",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c002/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c002/consensus_variance.png",
+      "description": "medium-scale motif with moderate-relief, moderate-roughness, high-contrast texture, dense branching/skeleton-like structure, and relatively strong fine-scale PSD content. Height distribution: positive-skew peaks, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 1,
+      "disease_overlap_patient_counts": {
+        "multiple_sclerosis": 1
+      },
+      "display_name": "medium moderate-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.75,
+        "fine_psd": 1.0,
+        "gradient": 0.875,
+        "height_range": 0.375,
+        "rms_roughness": 0.375,
+        "roughness": 0.375,
+        "skeleton_density": 0.75,
+        "texture_contrast": 1.0
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.5040774837136268,
+        "handcrafted.roughness_Sa": 0.5571607917547226,
+        "handcrafted.roughness_Sku": 11.833204221725463,
+        "handcrafted.roughness_Sq": 0.785616859793663,
+        "handcrafted.roughness_Ssk": 1.8336541652679443,
+        "handcrafted.roughness_Sz": 8.304562240839005,
+        "psd.psd_high_fraction": 0.03337539309589918,
+        "psd.psd_low_fraction": 0.5671018058423541,
+        "texture.glcm_contrast": 5.8306908130196184,
+        "topology.skeleton_junctions": 1276.6,
+        "topology.skeleton_length_px": 3507.55
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 1,
+      "n_samples": 1,
+      "n_tiles": 20,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c002/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c002",
+          "fraction": 1.0,
+          "patient_id": "19_pm_sm",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c002",
+          "fraction": 1.0,
+          "sample_id": "19_pm_sm_fa154f338b55",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c003.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c003_card.png",
+      "cluster_id": "medium__c003",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c003/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c003/consensus_variance.png",
+      "description": "medium-scale motif with moderate-relief, moderate-roughness, mixed-texture, sparse or compact structure, and mixed-frequency PSD content. Height distribution: positive-skew peaks, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 2,
+      "disease_overlap_patient_counts": {
+        "dry_eye": 1,
+        "multiple_sclerosis": 1
+      },
+      "display_name": "medium moderate-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.125,
+        "fine_psd": 0.625,
+        "gradient": 0.625,
+        "height_range": 0.625,
+        "rms_roughness": 0.5,
+        "roughness": 0.5,
+        "skeleton_density": 0.125,
+        "texture_contrast": 0.375
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.23257469137509665,
+        "handcrafted.roughness_Sa": 0.816948413848877,
+        "handcrafted.roughness_Sku": 22.97927761077881,
+        "handcrafted.roughness_Sq": 1.4648984803093805,
+        "handcrafted.roughness_Ssk": 3.8491185241275363,
+        "handcrafted.roughness_Sz": 12.881868322690329,
+        "psd.psd_high_fraction": 0.0001997573482103881,
+        "psd.psd_low_fraction": 0.996595889791877,
+        "texture.glcm_contrast": 0.34711176420008194,
+        "topology.skeleton_junctions": 2.0,
+        "topology.skeleton_length_px": 57.888888888888886
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 2,
+      "n_samples": 2,
+      "n_tiles": 9,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c003/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c003",
+          "fraction": 0.6666666666666666,
+          "patient_id": "29_pm_suche_oko",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c003",
+          "fraction": 0.6666666666666666,
+          "sample_id": "29_pm_suche_oko_350aab4876ad",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c004.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c004_card.png",
+      "cluster_id": "medium__c004",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c004/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c004/consensus_variance.png",
+      "description": "medium-scale motif with low-relief, low-roughness, high-contrast texture, moderate structural complexity, and relatively strong fine-scale PSD content. Height distribution: near-symmetric height distribution, moderate height tails.",
+      "disease_overlap_n_patients": 1,
+      "disease_overlap_patient_counts": {
+        "dry_eye": 1
+      },
+      "display_name": "medium low-relief low-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.625,
+        "fine_psd": 0.875,
+        "gradient": 0.5,
+        "height_range": 0.125,
+        "rms_roughness": 0.125,
+        "roughness": 0.125,
+        "skeleton_density": 0.5,
+        "texture_contrast": 0.875
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.2113975640386343,
+        "handcrafted.roughness_Sa": 0.4245425835251808,
+        "handcrafted.roughness_Sku": 2.929974853992462,
+        "handcrafted.roughness_Sq": 0.5198278799653053,
+        "handcrafted.roughness_Ssk": 0.01952507160604,
+        "handcrafted.roughness_Sz": 3.430313214659691,
+        "psd.psd_high_fraction": 0.0017786374680619612,
+        "psd.psd_low_fraction": 0.9574957756527757,
+        "texture.glcm_contrast": 2.9686963828344766,
+        "topology.skeleton_junctions": 298.75,
+        "topology.skeleton_length_px": 1788.375
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 1,
+      "n_samples": 1,
+      "n_tiles": 8,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c004/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c004",
+          "fraction": 1.0,
+          "patient_id": "29_pm_suche_oko",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c004",
+          "fraction": 1.0,
+          "sample_id": "29_pm_suche_oko_350aab4876ad",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c005.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c005_card.png",
+      "cluster_id": "medium__c005",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c005/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c005/consensus_variance.png",
+      "description": "medium-scale motif with high-relief, high-roughness, smooth-texture, moderate structural complexity, and mostly low-frequency PSD content. Height distribution: near-symmetric height distribution, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 1,
+      "disease_overlap_patient_counts": {
+        "multiple_sclerosis": 1
+      },
+      "display_name": "medium high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.375,
+        "fine_psd": 0.125,
+        "gradient": 0.25,
+        "height_range": 0.875,
+        "rms_roughness": 0.875,
+        "roughness": 0.875,
+        "skeleton_density": 0.625,
+        "texture_contrast": 0.125
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.11906935200095177,
+        "handcrafted.roughness_Sa": 1.922660219669342,
+        "handcrafted.roughness_Sku": 4.0149169921875,
+        "handcrafted.roughness_Sq": 2.4994707822799684,
+        "handcrafted.roughness_Ssk": 0.27381844967603686,
+        "handcrafted.roughness_Sz": 16.13661150932312,
+        "psd.psd_high_fraction": 1.1854571256259895e-05,
+        "psd.psd_low_fraction": 0.999866308568088,
+        "texture.glcm_contrast": 0.10735963831749071,
+        "topology.skeleton_junctions": 91.2,
+        "topology.skeleton_length_px": 2423.8
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 1,
+      "n_samples": 1,
+      "n_tiles": 10,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c005/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c005",
+          "fraction": 1.0,
+          "patient_id": "19_sm_mk",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c005",
+          "fraction": 1.0,
+          "sample_id": "19_sm_mk_02b4d1110372",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c006.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c006_card.png",
+      "cluster_id": "medium__c006",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c006/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c006/consensus_variance.png",
+      "description": "medium-scale motif with low-relief, low-roughness, mixed-texture, dense branching/skeleton-like structure, and mixed-frequency PSD content. Height distribution: negative-skew pits, moderate height tails.",
+      "disease_overlap_n_patients": 1,
+      "disease_overlap_patient_counts": {
+        "diabetes": 1
+      },
+      "display_name": "medium low-relief low-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 1.0,
+        "fine_psd": 0.5,
+        "gradient": 0.125,
+        "height_range": 0.25,
+        "rms_roughness": 0.25,
+        "roughness": 0.25,
+        "skeleton_density": 1.0,
+        "texture_contrast": 0.625
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.07698257962862651,
+        "handcrafted.roughness_Sa": 0.511728185415268,
+        "handcrafted.roughness_Sku": 2.9806503295898437,
+        "handcrafted.roughness_Sq": 0.6415122350056967,
+        "handcrafted.roughness_Ssk": -0.6187971919775009,
+        "handcrafted.roughness_Sz": 4.279398735364278,
+        "psd.psd_high_fraction": 9.270131150367562e-05,
+        "psd.psd_low_fraction": 0.9988164310346203,
+        "texture.glcm_contrast": 0.6940591191456542,
+        "topology.skeleton_junctions": 2787.6,
+        "topology.skeleton_length_px": 23478.6
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 1,
+      "n_samples": 1,
+      "n_tiles": 15,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c006/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c006",
+          "fraction": 1.0,
+          "patient_id": "dusan1_dm_ster_mikro_281",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c006",
+          "fraction": 1.0,
+          "sample_id": "dusan1_dm_ster_mikro_281123_813b32c1e7b5",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c007.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c007_card.png",
+      "cluster_id": "medium__c007",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c007/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c007/consensus_variance.png",
+      "description": "medium-scale motif with high-relief, high-roughness, high-contrast texture, dense branching/skeleton-like structure, and relatively strong fine-scale PSD content. Height distribution: near-symmetric height distribution, moderate height tails.",
+      "disease_overlap_n_patients": 1,
+      "disease_overlap_patient_counts": {
+        "multiple_sclerosis": 1
+      },
+      "display_name": "medium high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.875,
+        "fine_psd": 0.75,
+        "gradient": 1.0,
+        "height_range": 0.75,
+        "rms_roughness": 0.75,
+        "roughness": 0.75,
+        "skeleton_density": 0.875,
+        "texture_contrast": 0.75
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.9019998051226139,
+        "handcrafted.roughness_Sa": 1.7294847071170807,
+        "handcrafted.roughness_Sku": 3.3079545944929123,
+        "handcrafted.roughness_Sq": 2.188263013958931,
+        "handcrafted.roughness_Ssk": 0.35712830018019304,
+        "handcrafted.roughness_Sz": 15.609309509396553,
+        "psd.psd_high_fraction": 0.0014328531898636409,
+        "psd.psd_low_fraction": 0.9505547199436042,
+        "texture.glcm_contrast": 2.918089103382429,
+        "topology.skeleton_junctions": 1457.125,
+        "topology.skeleton_length_px": 7354.875
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 1,
+      "n_samples": 1,
+      "n_tiles": 16,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c007/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c007",
+          "fraction": 1.0,
+          "patient_id": "20_lm_sm_ss",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c007",
+          "fraction": 1.0,
+          "sample_id": "20_lm_sm_ss_33548e5fb625",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/medium__c008.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/medium__c008_card.png",
+      "cluster_id": "medium__c008",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/medium__c008/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/medium__c008/consensus_variance.png",
+      "description": "medium-scale motif with moderate-relief, moderate-roughness, mixed-texture, moderate structural complexity, and mixed-frequency PSD content. Height distribution: near-symmetric height distribution, moderate height tails.",
+      "disease_overlap_n_patients": 6,
+      "disease_overlap_patient_counts": {
+        "healthy": 4,
+        "multiple_sclerosis": 2
+      },
+      "display_name": "medium moderate-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.5,
+        "fine_psd": 0.375,
+        "gradient": 0.375,
+        "height_range": 0.5,
+        "rms_roughness": 0.625,
+        "roughness": 0.625,
+        "skeleton_density": 0.375,
+        "texture_contrast": 0.5
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.20877036899328233,
+        "handcrafted.roughness_Sa": 1.6262176513671875,
+        "handcrafted.roughness_Sku": 2.514510612487793,
+        "handcrafted.roughness_Sq": 1.9758116340637206,
+        "handcrafted.roughness_Ssk": 0.05850884322077036,
+        "handcrafted.roughness_Sz": 9.995627346038818,
+        "psd.psd_high_fraction": 7.601040992903694e-05,
+        "psd.psd_low_fraction": 0.9988349721787353,
+        "texture.glcm_contrast": 0.3620118753198738,
+        "topology.skeleton_junctions": 96.32,
+        "topology.skeleton_length_px": 1543.88
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 6,
+      "n_samples": 8,
+      "n_tiles": 25,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/medium__c008/prototype_panel.png",
+      "scale_name": "medium",
+      "warnings": [
+        {
+          "cluster_id": "medium__c008",
+          "fraction": 0.52,
+          "patient_id": "9l",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "medium__c008",
+          "fraction": 0.52,
+          "sample_id": "9l_69370dbb849c",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c000.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c000_card.png",
+      "cluster_id": "small__c000",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c000/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c000/consensus_variance.png",
+      "description": "small-scale motif with moderate-relief, moderate-roughness, high-contrast texture, sparse or compact structure, and relatively strong fine-scale PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 6,
+      "disease_overlap_patient_counts": {
+        "POAG": 1,
+        "diabetes": 1,
+        "dry_eye": 1,
+        "healthy": 3
+      },
+      "display_name": "small moderate-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.18181818181818182,
+        "fine_psd": 0.9090909090909091,
+        "gradient": 1.0,
+        "height_range": 0.45454545454545453,
+        "rms_roughness": 0.45454545454545453,
+        "roughness": 0.45454545454545453,
+        "skeleton_density": 0.09090909090909091,
+        "texture_contrast": 0.9090909090909091
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.8084649840990702,
+        "handcrafted.roughness_Sa": 1.8070566941190649,
+        "handcrafted.roughness_Sku": 2.2706074317296348,
+        "handcrafted.roughness_Sq": 2.1071272249575013,
+        "handcrafted.roughness_Ssk": 0.37225642427802086,
+        "handcrafted.roughness_Sz": 8.627944610736987,
+        "psd.psd_high_fraction": 0.007021616847483642,
+        "psd.psd_low_fraction": 0.9116952610028132,
+        "texture.glcm_contrast": 4.581341369524318,
+        "topology.skeleton_junctions": 12.703703703703704,
+        "topology.skeleton_length_px": 99.22222222222223
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 6,
+      "n_samples": 7,
+      "n_tiles": 27,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c000/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": [
+        {
+          "cluster_id": "small__c000",
+          "fraction": 0.6666666666666666,
+          "patient_id": "kontr_01_03_2024_lo",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "small__c000",
+          "fraction": 0.6666666666666666,
+          "sample_id": "kontr_01_03_2024_lo_31aee4de9403",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c001.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c001_card.png",
+      "cluster_id": "small__c001",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c001/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c001/consensus_variance.png",
+      "description": "small-scale motif with high-relief, high-roughness, smooth-texture, sparse or compact structure, and mixed-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 16,
+      "disease_overlap_patient_counts": {
+        "POAG": 5,
+        "healthy": 7,
+        "multiple_sclerosis": 4
+      },
+      "display_name": "small high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.2727272727272727,
+        "fine_psd": 0.36363636363636365,
+        "gradient": 0.6363636363636364,
+        "height_range": 1.0,
+        "rms_roughness": 1.0,
+        "roughness": 1.0,
+        "skeleton_density": 0.2727272727272727,
+        "texture_contrast": 0.18181818181818182
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.4194121727553325,
+        "handcrafted.roughness_Sa": 3.5546559773809543,
+        "handcrafted.roughness_Sku": 2.4127306579574337,
+        "handcrafted.roughness_Sq": 4.228553720606052,
+        "handcrafted.roughness_Ssk": -0.4948074396858673,
+        "handcrafted.roughness_Sz": 17.262242198959598,
+        "psd.psd_high_fraction": 0.0004338026584919287,
+        "psd.psd_low_fraction": 0.9951102202216635,
+        "texture.glcm_contrast": 0.361096712226078,
+        "topology.skeleton_junctions": 14.178861788617887,
+        "topology.skeleton_length_px": 249.3780487804878
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 16,
+      "n_samples": 23,
+      "n_tiles": 246,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c001/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c002.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c002_card.png",
+      "cluster_id": "small__c002",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c002/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c002/consensus_variance.png",
+      "description": "small-scale motif with high-relief, high-roughness, mixed-texture, sparse or compact structure, and mixed-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 18,
+      "disease_overlap_patient_counts": {
+        "POAG": 5,
+        "diabetes": 1,
+        "dry_eye": 1,
+        "healthy": 3,
+        "multiple_sclerosis": 8
+      },
+      "display_name": "small high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.09090909090909091,
+        "fine_psd": 0.45454545454545453,
+        "gradient": 0.45454545454545453,
+        "height_range": 0.7272727272727273,
+        "rms_roughness": 0.8181818181818182,
+        "roughness": 0.8181818181818182,
+        "skeleton_density": 0.18181818181818182,
+        "texture_contrast": 0.45454545454545453
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.2754150283270342,
+        "handcrafted.roughness_Sa": 2.45797774309324,
+        "handcrafted.roughness_Sku": 2.17480241040052,
+        "handcrafted.roughness_Sq": 2.8908119536304877,
+        "handcrafted.roughness_Ssk": -0.24183857019041602,
+        "handcrafted.roughness_Sz": 11.331235205723068,
+        "psd.psd_high_fraction": 0.00045821155540369177,
+        "psd.psd_low_fraction": 0.9944713513195305,
+        "texture.glcm_contrast": 0.49521710514913814,
+        "topology.skeleton_junctions": 10.917372881355933,
+        "topology.skeleton_length_px": 200.69703389830508
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 18,
+      "n_samples": 45,
+      "n_tiles": 472,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c002/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c003.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c003_card.png",
+      "cluster_id": "small__c003",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c003/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c003/consensus_variance.png",
+      "description": "small-scale motif with high-relief, high-roughness, mixed-texture, moderate structural complexity, and mostly low-frequency PSD content. Height distribution: positive-skew peaks, moderate height tails.",
+      "disease_overlap_n_patients": 22,
+      "disease_overlap_patient_counts": {
+        "POAG": 4,
+        "diabetes": 3,
+        "dry_eye": 1,
+        "healthy": 12,
+        "multiple_sclerosis": 2
+      },
+      "display_name": "small high-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.36363636363636365,
+        "fine_psd": 0.2727272727272727,
+        "gradient": 0.5454545454545454,
+        "height_range": 0.9090909090909091,
+        "rms_roughness": 0.9090909090909091,
+        "roughness": 0.9090909090909091,
+        "skeleton_density": 0.5454545454545454,
+        "texture_contrast": 0.36363636363636365
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.3675734475961707,
+        "handcrafted.roughness_Sa": 2.9453288339340915,
+        "handcrafted.roughness_Sku": 2.8648218837210804,
+        "handcrafted.roughness_Sq": 3.495108623814777,
+        "handcrafted.roughness_Ssk": 0.6497364513434691,
+        "handcrafted.roughness_Sz": 14.898036087754619,
+        "psd.psd_high_fraction": 0.00028890532414401816,
+        "psd.psd_low_fraction": 0.9963770300392838,
+        "texture.glcm_contrast": 0.42655156828921403,
+        "topology.skeleton_junctions": 23.899728997289973,
+        "topology.skeleton_length_px": 375.2791327913279
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 22,
+      "n_samples": 43,
+      "n_tiles": 369,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c003/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c004.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c004_card.png",
+      "cluster_id": "small__c004",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c004/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c004/consensus_variance.png",
+      "description": "small-scale motif with low-relief, moderate-roughness, smooth-texture, moderate structural complexity, and mostly low-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 25,
+      "disease_overlap_patient_counts": {
+        "POAG": 5,
+        "diabetes": 3,
+        "dry_eye": 1,
+        "healthy": 10,
+        "multiple_sclerosis": 6
+      },
+      "display_name": "small low-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.45454545454545453,
+        "fine_psd": 0.18181818181818182,
+        "gradient": 0.18181818181818182,
+        "height_range": 0.18181818181818182,
+        "rms_roughness": 0.36363636363636365,
+        "roughness": 0.36363636363636365,
+        "skeleton_density": 0.6363636363636364,
+        "texture_contrast": 0.2727272727272727
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.15433808679646643,
+        "handcrafted.roughness_Sa": 1.3277988420402418,
+        "handcrafted.roughness_Sku": 2.4029831651781426,
+        "handcrafted.roughness_Sq": 1.5924089533872292,
+        "handcrafted.roughness_Ssk": 0.16708603361468824,
+        "handcrafted.roughness_Sz": 6.957684090000684,
+        "psd.psd_high_fraction": 0.00023241961673743918,
+        "psd.psd_low_fraction": 0.9970430831079494,
+        "texture.glcm_contrast": 0.39029886878093895,
+        "topology.skeleton_junctions": 26.824590163934428,
+        "topology.skeleton_length_px": 447.62622950819673
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 25,
+      "n_samples": 49,
+      "n_tiles": 610,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c004/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c005.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c005_card.png",
+      "cluster_id": "small__c005",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c005/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c005/consensus_variance.png",
+      "description": "small-scale motif with moderate-relief, moderate-roughness, mixed-texture, moderate structural complexity, and mixed-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 27,
+      "disease_overlap_patient_counts": {
+        "POAG": 4,
+        "diabetes": 4,
+        "dry_eye": 1,
+        "healthy": 12,
+        "multiple_sclerosis": 6
+      },
+      "display_name": "small moderate-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.5454545454545454,
+        "fine_psd": 0.6363636363636364,
+        "gradient": 0.7272727272727273,
+        "height_range": 0.6363636363636364,
+        "rms_roughness": 0.7272727272727273,
+        "roughness": 0.6363636363636364,
+        "skeleton_density": 0.36363636363636365,
+        "texture_contrast": 0.6363636363636364
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.4511689252001978,
+        "handcrafted.roughness_Sa": 2.1201020618796793,
+        "handcrafted.roughness_Sku": 2.4708311256422872,
+        "handcrafted.roughness_Sq": 2.5434721169307775,
+        "handcrafted.roughness_Ssk": 0.06624721333356763,
+        "handcrafted.roughness_Sz": 11.271824621910499,
+        "psd.psd_high_fraction": 0.0008106035171249545,
+        "psd.psd_low_fraction": 0.9893441332879349,
+        "texture.glcm_contrast": 0.8714051966132762,
+        "topology.skeleton_junctions": 30.366171003717472,
+        "topology.skeleton_length_px": 341.41635687732344
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 27,
+      "n_samples": 48,
+      "n_tiles": 538,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c005/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c006.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c006_card.png",
+      "cluster_id": "small__c006",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c006/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c006/consensus_variance.png",
+      "description": "small-scale motif with moderate-relief, low-roughness, mixed-texture, dense branching/skeleton-like structure, and mixed-frequency PSD content. Height distribution: negative-skew pits, moderate height tails.",
+      "disease_overlap_n_patients": 16,
+      "disease_overlap_patient_counts": {
+        "POAG": 5,
+        "diabetes": 2,
+        "healthy": 3,
+        "multiple_sclerosis": 6
+      },
+      "display_name": "small moderate-relief low-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.9090909090909091,
+        "fine_psd": 0.5454545454545454,
+        "gradient": 0.2727272727272727,
+        "height_range": 0.36363636363636365,
+        "rms_roughness": 0.2727272727272727,
+        "roughness": 0.2727272727272727,
+        "skeleton_density": 1.0,
+        "texture_contrast": 0.5454545454545454
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.18667987495753335,
+        "handcrafted.roughness_Sa": 1.1983480569183456,
+        "handcrafted.roughness_Sku": 3.924142082285437,
+        "handcrafted.roughness_Sq": 1.5610108607859345,
+        "handcrafted.roughness_Ssk": -0.9382142550326444,
+        "handcrafted.roughness_Sz": 8.161762662740967,
+        "psd.psd_high_fraction": 0.000663820937474241,
+        "psd.psd_low_fraction": 0.9922225123095559,
+        "texture.glcm_contrast": 0.5546766656087427,
+        "topology.skeleton_junctions": 137.24534161490683,
+        "topology.skeleton_length_px": 1309.4968944099378
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 16,
+      "n_samples": 31,
+      "n_tiles": 322,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c006/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c007.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c007_card.png",
+      "cluster_id": "small__c007",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c007/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c007/consensus_variance.png",
+      "description": "small-scale motif with low-relief, low-roughness, high-contrast texture, dense branching/skeleton-like structure, and relatively strong fine-scale PSD content. Height distribution: positive-skew peaks, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 2,
+      "disease_overlap_patient_counts": {
+        "multiple_sclerosis": 2
+      },
+      "display_name": "small low-relief low-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 1.0,
+        "fine_psd": 1.0,
+        "gradient": 0.8181818181818182,
+        "height_range": 0.2727272727272727,
+        "rms_roughness": 0.18181818181818182,
+        "roughness": 0.18181818181818182,
+        "skeleton_density": 0.7272727272727273,
+        "texture_contrast": 1.0
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.49089169423831136,
+        "handcrafted.roughness_Sa": 0.5332207483680624,
+        "handcrafted.roughness_Sku": 12.651329923094364,
+        "handcrafted.roughness_Sq": 0.7554612815902945,
+        "handcrafted.roughness_Ssk": 1.869157730487355,
+        "handcrafted.roughness_Sz": 7.0274526921280644,
+        "psd.psd_high_fraction": 0.037432651915633004,
+        "psd.psd_low_fraction": 0.528032139600804,
+        "texture.glcm_contrast": 5.934618889322586,
+        "topology.skeleton_junctions": 162.44736842105263,
+        "topology.skeleton_length_px": 489.7719298245614
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 2,
+      "n_samples": 2,
+      "n_tiles": 114,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c007/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": [
+        {
+          "cluster_id": "small__c007",
+          "fraction": 0.9824561403508771,
+          "patient_id": "19_pm_sm",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "small__c007",
+          "fraction": 0.9824561403508771,
+          "sample_id": "19_pm_sm_fa154f338b55",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c008.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c008_card.png",
+      "cluster_id": "small__c008",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c008/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c008/consensus_variance.png",
+      "description": "small-scale motif with high-relief, moderate-roughness, high-contrast texture, dense branching/skeleton-like structure, and relatively strong fine-scale PSD content. Height distribution: near-symmetric height distribution, moderate height tails.",
+      "disease_overlap_n_patients": 10,
+      "disease_overlap_patient_counts": {
+        "POAG": 2,
+        "diabetes": 1,
+        "healthy": 4,
+        "multiple_sclerosis": 3
+      },
+      "display_name": "small high-relief moderate-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.8181818181818182,
+        "fine_psd": 0.7272727272727273,
+        "gradient": 0.9090909090909091,
+        "height_range": 0.8181818181818182,
+        "rms_roughness": 0.5454545454545454,
+        "roughness": 0.5454545454545454,
+        "skeleton_density": 0.8181818181818182,
+        "texture_contrast": 0.7272727272727273
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.7996379708250364,
+        "handcrafted.roughness_Sa": 1.8527972721586041,
+        "handcrafted.roughness_Sku": 3.062568445416058,
+        "handcrafted.roughness_Sq": 2.2776387433211007,
+        "handcrafted.roughness_Ssk": 0.40572314682489663,
+        "handcrafted.roughness_Sz": 12.147981304748386,
+        "psd.psd_high_fraction": 0.002572089981191064,
+        "psd.psd_low_fraction": 0.9415280643213754,
+        "texture.glcm_contrast": 2.6495540322268134,
+        "topology.skeleton_junctions": 130.8186274509804,
+        "topology.skeleton_length_px": 729.5245098039215
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 10,
+      "n_samples": 15,
+      "n_tiles": 204,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c008/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": [
+        {
+          "cluster_id": "small__c008",
+          "fraction": 0.5294117647058824,
+          "patient_id": "20_lm_sm_ss",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "small__c008",
+          "fraction": 0.5294117647058824,
+          "sample_id": "20_lm_sm_ss_33548e5fb625",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c009.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c009_card.png",
+      "cluster_id": "small__c009",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c009/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c009/consensus_variance.png",
+      "description": "small-scale motif with moderate-relief, high-roughness, smooth-texture, elongated skeleton-like structure, and mostly low-frequency PSD content. Height distribution: near-symmetric height distribution, compact height distribution.",
+      "disease_overlap_n_patients": 11,
+      "disease_overlap_patient_counts": {
+        "POAG": 4,
+        "diabetes": 1,
+        "dry_eye": 1,
+        "healthy": 2,
+        "multiple_sclerosis": 3
+      },
+      "display_name": "small moderate-relief high-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.6363636363636364,
+        "fine_psd": 0.09090909090909091,
+        "gradient": 0.09090909090909091,
+        "height_range": 0.5454545454545454,
+        "rms_roughness": 0.6363636363636364,
+        "roughness": 0.7272727272727273,
+        "skeleton_density": 0.9090909090909091,
+        "texture_contrast": 0.09090909090909091
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.06996254983653383,
+        "handcrafted.roughness_Sa": 2.135231598121364,
+        "handcrafted.roughness_Sku": 2.1856355370544804,
+        "handcrafted.roughness_Sq": 2.5247932195663454,
+        "handcrafted.roughness_Ssk": -0.1462974047833463,
+        "handcrafted.roughness_Sz": 10.399772001475823,
+        "psd.psd_high_fraction": 1.4133849632192335e-05,
+        "psd.psd_low_fraction": 0.9998438381617736,
+        "texture.glcm_contrast": 0.1021554474883358,
+        "topology.skeleton_junctions": 37.24390243902439,
+        "topology.skeleton_length_px": 1235.239024390244
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 11,
+      "n_samples": 12,
+      "n_tiles": 205,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c009/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": []
+    },
+    {
+      "card_md": "reports/v1/atlas_motif_catalog/cards/small__c011.md",
+      "card_png": "reports/v1/atlas_motif_catalog/cards/small__c011_card.png",
+      "cluster_id": "small__c011",
+      "consensus_mean": "artifacts/pattern_atlas/clusters/small__c011/consensus_mean.png",
+      "consensus_variance": "artifacts/pattern_atlas/clusters/small__c011/consensus_variance.png",
+      "description": "small-scale motif with low-relief, low-roughness, high-contrast texture, locally branched structure, and relatively strong fine-scale PSD content. Height distribution: near-symmetric height distribution, heavy-tailed height distribution.",
+      "disease_overlap_n_patients": 4,
+      "disease_overlap_patient_counts": {
+        "diabetes": 1,
+        "dry_eye": 1,
+        "healthy": 1,
+        "multiple_sclerosis": 1
+      },
+      "display_name": "small low-relief low-roughness motif",
+      "feature_ranks_within_scale": {
+        "branching": 0.7272727272727273,
+        "fine_psd": 0.8181818181818182,
+        "gradient": 0.36363636363636365,
+        "height_range": 0.09090909090909091,
+        "rms_roughness": 0.09090909090909091,
+        "roughness": 0.09090909090909091,
+        "skeleton_density": 0.45454545454545453,
+        "texture_contrast": 0.8181818181818182
+      },
+      "feature_signature": {
+        "handcrafted.grad_grad_mean": 0.2493732881808431,
+        "handcrafted.roughness_Sa": 0.5174862221351959,
+        "handcrafted.roughness_Sku": 4.154579532971172,
+        "handcrafted.roughness_Sq": 0.6527005812656954,
+        "handcrafted.roughness_Ssk": 0.2691301806220703,
+        "handcrafted.roughness_Sz": 3.834650733186014,
+        "psd.psd_high_fraction": 0.0033340738614330723,
+        "psd.psd_low_fraction": 0.9317320668333641,
+        "texture.glcm_contrast": 2.8351838909002796,
+        "topology.skeleton_junctions": 56.899371069182386,
+        "topology.skeleton_length_px": 352.55345911949684
+      },
+      "interpretation_guardrail": "Exploratory morphology cluster, not a diagnosis label.",
+      "n_patients": 4,
+      "n_samples": 6,
+      "n_tiles": 159,
+      "prototype_panel": "artifacts/pattern_atlas/clusters/small__c011/prototype_panel.png",
+      "scale_name": "small",
+      "warnings": [
+        {
+          "cluster_id": "small__c011",
+          "fraction": 0.6226415094339622,
+          "patient_id": "29_pm_suche_oko",
+          "warning": "cluster_dominated_by_one_patient"
+        },
+        {
+          "cluster_id": "small__c011",
+          "fraction": 0.6226415094339622,
+          "sample_id": "29_pm_suche_oko_350aab4876ad",
+          "warning": "cluster_dominated_by_one_sample"
+        }
+      ]
+    }
+  ],
+  "not_a_classifier": true
+}

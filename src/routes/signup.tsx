@@ -94,6 +94,16 @@ function Signup() {
               Log in
             </Link>
           </p>
+          <p className="text-muted-foreground/40 mt-2 text-center text-xs">
+            <a
+              href="/atlas_motif_catalog/motif_catalog.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-muted-foreground/70"
+            >
+              Atlas motif catalog
+            </a>
+          </p>
         </CardContent>
       </Card>
     </div>

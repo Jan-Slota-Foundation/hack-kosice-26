@@ -27,6 +27,14 @@ function AuthenticatedLayout() {
       <SidebarInset>
         <header className="relative z-10 flex h-12 items-center gap-2 border-b bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.18),transparent_60%),radial-gradient(ellipse_at_top_right,rgba(236,72,153,0.14),transparent_65%),linear-gradient(to_right,rgba(99,102,241,0.08),transparent_70%)] px-3">
           <SidebarTrigger />
+          <a
+            href="/atlas_motif_catalog/motif_catalog.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground/40 hover:text-muted-foreground/70 ml-auto text-xs"
+          >
+            Atlas motif catalog
+          </a>
         </header>
         <Outlet />
       </SidebarInset>
