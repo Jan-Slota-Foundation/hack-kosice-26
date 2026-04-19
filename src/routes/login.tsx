@@ -71,7 +71,7 @@ function Login() {
           >
             <FieldGroup>
               <FieldSet>
-                <FieldLegend>Log in</FieldLegend>
+                <FieldLegend className="text-3xl">Log in</FieldLegend>
                 <InputField
                   label="Email"
                   name="email"

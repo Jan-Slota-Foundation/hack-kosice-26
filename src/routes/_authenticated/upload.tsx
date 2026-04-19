@@ -1,9 +1,9 @@
+import { InputField } from '@/components/input-field'
+import { PageLayout } from '@/components/page-layout'
 import {
   RawFileDropzone,
   type UploadStatus,
 } from '@/components/raw-file-dropzone'
-import { InputField } from '@/components/input-field'
-import { PageLayout } from '@/components/page-layout'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { useAuth } from '@/lib/auth-context'
@@ -166,66 +166,68 @@ function UploadPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.12),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_60%),linear-gradient(to_bottom_right,rgba(99,102,241,0.05),transparent_70%)]">
+    <div className="flex flex-1 flex-col">
       <PageLayout title="New analysis job">
         <form
-          className="mx-auto flex w-full max-w-4xl flex-col gap-4"
-        onSubmit={(e) => {
-          void handleSubmit(e)
-        }}
-      >
-        <p className="text-muted-foreground text-sm">
-          Name your job and upload raw files to analyse.
-        </p>
-        <InputField
-          label="Job name"
-          placeholder="e.g. Batch 42 – left eye"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value)
+          className="mx-auto flex w-full max-w-4xl flex-col gap-6"
+          onSubmit={(e) => {
+            void handleSubmit(e)
           }}
-          maxLength={200}
-          disabled={isUploading}
-        />
-        {isDoctor && (
-          <Field>
-            <FieldLabel>Patient</FieldLabel>
-            <select
-              value={patientId}
-              onChange={(e) => {
-                setPatientId(e.target.value)
-              }}
-              disabled={isUploading || patientsQuery.isLoading}
-              className={cn(
-                'border-input bg-input/20 focus-visible:border-ring focus-visible:ring-ring/30 dark:bg-input/30 h-7 w-full min-w-0 rounded-md border px-2 py-0.5 text-sm transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-xs/relaxed',
-              )}
-            >
-              <option value="">
-                {patientsQuery.isLoading
-                  ? 'Loading patients…'
-                  : patientsQuery.data?.patients.length === 0
-                    ? 'No patients assigned'
-                    : 'Select a patient'}
-              </option>
-              {patientsQuery.data?.patients.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} · {p.email}
+        >
+          <InputField
+            label="Job name"
+            placeholder="e.g. Batch 42 – left eye"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value)
+            }}
+            maxLength={200}
+            disabled={isUploading}
+            className="[&_input]:h-9 [&_input]:px-3 [&_input]:text-sm [&_input]:md:text-sm"
+          />
+          {isDoctor && (
+            <Field>
+              <FieldLabel>Patient</FieldLabel>
+              <select
+                value={patientId}
+                onChange={(e) => {
+                  setPatientId(e.target.value)
+                }}
+                disabled={isUploading || patientsQuery.isLoading}
+                className={cn(
+                  'border-input bg-input/20 focus-visible:border-ring focus-visible:ring-ring/30 dark:bg-input/30 h-9 w-full min-w-0 rounded-md border px-3 py-0.5 text-sm transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+                )}
+              >
+                <option value="">
+                  {patientsQuery.isLoading
+                    ? 'Loading patients…'
+                    : patientsQuery.data?.patients.length === 0
+                      ? 'No patients assigned'
+                      : 'Select a patient'}
                 </option>
-              ))}
-            </select>
-          </Field>
-        )}
-        <RawFileDropzone
-          files={files}
-          onFilesChange={handleFilesChange}
-          statuses={uploadStatuses}
-          disabled={isUploading}
-        />
-        <div>
-          <Button type="submit" disabled={!canSubmit}>
-            {isUploading ? 'Uploading…' : 'Create analysis job'}
-          </Button>
-        </div>
+                {patientsQuery.data?.patients.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} · {p.email}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
+          <RawFileDropzone
+            files={files}
+            onFilesChange={handleFilesChange}
+            statuses={uploadStatuses}
+            disabled={isUploading}
+          />
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              className="h-9 px-4 text-sm"
+            >
+              {isUploading ? 'Uploading…' : 'Create analysis job'}
+            </Button>
+          </div>
         </form>
       </PageLayout>
     </div>

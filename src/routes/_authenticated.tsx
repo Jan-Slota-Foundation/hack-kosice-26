@@ -25,7 +25,7 @@ function AuthenticatedLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-12 items-center gap-2 border-b px-3">
+        <header className="relative z-10 flex h-12 items-center gap-2 border-b bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.18),transparent_60%),radial-gradient(ellipse_at_top_right,rgba(236,72,153,0.14),transparent_65%),linear-gradient(to_right,rgba(99,102,241,0.08),transparent_70%)] px-3">
           <SidebarTrigger />
         </header>
         <Outlet />

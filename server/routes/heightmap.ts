@@ -31,7 +31,13 @@ async function authorize(
   }
 
   const image = await prisma.rawImage.findFirst({
-    where: { id: rawImageId, userId: data.user.id },
+    where: {
+      id: rawImageId,
+      OR: [
+        { userId: data.user.id },
+        { job: { creatorId: data.user.id } },
+      ],
+    },
     select: { id: true, userId: true, filename: true },
   })
   if (!image) {
