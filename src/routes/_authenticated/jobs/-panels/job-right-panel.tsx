@@ -1,13 +1,7 @@
 import { HeightDistributionChart } from '@/components/height-distribution-chart'
 import { Badge } from '@/components/ui/badge'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { buttonVariants } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Carousel,
   CarouselContent,
@@ -23,22 +17,13 @@ import {
   GradientCardTitle,
 } from '@/components/ui/gradient-card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Download } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Download, FileText } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useJobDetail } from '../-job-detail-context'
 import { ClassificationTasks } from './classification-tasks'
-import {
-  ChartsGridSkeleton,
-  DiagnosisSkeleton,
-  FilesListSkeleton,
-} from './skeletons'
-
-function formatDate(date: Date | string | null | undefined) {
-  if (!date) return null
-  const d = typeof date === 'string' ? new Date(date) : date
-  return d.toLocaleString()
-}
+import { ChartsGridSkeleton, DiagnosisSkeleton } from './skeletons'
 
 function formatBytes(bytes: number | null | undefined) {
   if (bytes == null) return ''
@@ -80,27 +65,156 @@ function graphDescription(
   return 'Density vs area'
 }
 
+function FilesPanel() {
+  const { images, selectedImageId, setSelectedImageId } = useJobDetail()
+
+  return (
+    <Card className="flex h-full min-h-0 flex-col overflow-hidden py-0">
+      <div className="flex items-center gap-2 px-4 pt-4 pb-2">
+        <FileText className="text-muted-foreground size-4" />
+        <h3 className="text-sm font-semibold">Files</h3>
+        <Badge variant="secondary" className="text-[10px]">
+          {images.length.toString()}
+        </Badge>
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+        {images.length === 0 ? (
+          <p className="text-muted-foreground px-2 py-4 text-xs">
+            No files attached.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-1">
+            {images.map((image) => {
+              const isSelected = image.id === selectedImageId
+              return (
+                <li key={image.id}>
+                  <div
+                    className={cn(
+                      'group flex items-center gap-2 rounded-md border border-transparent px-2 py-1.5 transition-colors',
+                      isSelected
+                        ? 'border-primary/60 bg-accent/60'
+                        : 'hover:bg-accent/40',
+                    )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedImageId(image.id)
+                      }}
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                      aria-pressed={isSelected}
+                    >
+                      <span
+                        className={cn(
+                          'size-1.5 shrink-0 rounded-full',
+                          isSelected ? 'bg-primary' : 'bg-muted-foreground/40',
+                        )}
+                      />
+                      <span className="flex min-w-0 flex-col">
+                        <span
+                          className={cn(
+                            'truncate text-xs font-medium',
+                            isSelected
+                              ? 'text-foreground'
+                              : 'text-foreground/90',
+                          )}
+                        >
+                          {image.filename}
+                        </span>
+                        <span className="text-muted-foreground text-[10px]">
+                          {formatBytes(image.sizeBytes)}
+                        </span>
+                      </span>
+                    </button>
+                    {image.downloadUrl && (
+                      <a
+                        href={image.downloadUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Download"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                        }}
+                        className={cn(
+                          buttonVariants({
+                            variant: 'ghost',
+                            size: 'icon',
+                          }),
+                          'size-7 shrink-0 opacity-60 group-hover:opacity-100',
+                        )}
+                      >
+                        <Download className="size-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </div>
+    </Card>
+  )
+}
+
+function DiagnosisPanel() {
+  const { selectedImage } = useJobDetail()
+  const result = selectedImage?.result ?? null
+  const confidencePct = result ? Math.round(result.confidence * 100) : null
+
+  return (
+    <GradientCard className="h-full w-full">
+      <GradientCardHeader className="gap-1">
+        <GradientCardDescription className="text-[10px] font-medium tracking-[0.14em] uppercase">
+          Predicted diagnosis
+        </GradientCardDescription>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <GradientCardTitle className="text-2xl font-semibold tracking-tight">
+            {result?.diagnosis ?? 'Analysis pending'}
+          </GradientCardTitle>
+          {confidencePct !== null && (
+            <Badge variant="secondary" className="text-xs font-medium">
+              {confidencePct.toString()}% confidence
+            </Badge>
+          )}
+        </div>
+      </GradientCardHeader>
+      {confidencePct !== null && (
+        <GradientCardContent>
+          <div className="flex items-center justify-between text-[11px] font-medium">
+            <span className="text-muted-foreground">Model confidence</span>
+            <span className="tabular-nums">{confidencePct.toString()}%</span>
+          </div>
+          <ConfidenceBar value={confidencePct} />
+        </GradientCardContent>
+      )}
+    </GradientCard>
+  )
+}
+
 export function JobRightPanel() {
-  const {
-    jobQuery,
-    job,
-    images,
-    selectedImage,
-    selectedImageId,
-    setSelectedImageId,
-  } = useJobDetail()
+  const { jobQuery, job, selectedImage } = useJobDetail()
 
   if (jobQuery.isLoading) {
     return (
       <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-        <DiagnosisSkeleton />
+        <div className="grid h-44 shrink-0 grid-cols-2 gap-4">
+          <Card className="w-full">
+            <CardHeader className="gap-2">
+              <Skeleton className="h-4 w-20" />
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-5/6" />
+            </CardContent>
+          </Card>
+          <DiagnosisSkeleton />
+        </div>
         <Card className="w-full">
           <CardHeader className="gap-2">
             <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-3 w-48" />
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <FilesListSkeleton />
             <ChartsGridSkeleton />
           </CardContent>
         </Card>
@@ -122,7 +236,6 @@ export function JobRightPanel() {
   if (!job) return null
 
   const result = selectedImage?.result ?? null
-  const confidencePct = result ? Math.round(result.confidence * 100) : null
 
   return (
     <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
@@ -132,95 +245,16 @@ export function JobRightPanel() {
         </div>
       )}
 
-      <GradientCard className="w-full">
-        <GradientCardHeader className="gap-1">
-          <GradientCardDescription className="text-[10px] font-medium tracking-[0.14em] uppercase">
-            Predicted diagnosis
-          </GradientCardDescription>
-          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <GradientCardTitle className="text-2xl font-semibold tracking-tight">
-              {result?.diagnosis ?? 'Analysis pending'}
-            </GradientCardTitle>
-            {confidencePct !== null && (
-              <Badge variant="secondary" className="text-xs font-medium">
-                {confidencePct.toString()}% confidence
-              </Badge>
-            )}
-          </div>
-        </GradientCardHeader>
-        {confidencePct !== null && (
-          <GradientCardContent>
-            <div className="flex items-center justify-between text-[11px] font-medium">
-              <span className="text-muted-foreground">Model confidence</span>
-              <span className="tabular-nums">{confidencePct.toString()}%</span>
-            </div>
-            <ConfidenceBar value={confidencePct} />
-          </GradientCardContent>
-        )}
-      </GradientCard>
+      <div className="grid h-44 shrink-0 grid-cols-2 gap-4">
+        <FilesPanel />
+        <DiagnosisPanel />
+      </div>
 
-      <Card className="max-h-[calc(100svh-18rem)] w-full overflow-y-auto">
+      <Card className="max-h-[calc(100svh-21rem)] w-full overflow-y-auto">
         <CardHeader>
-          <CardTitle>Files ({images.length.toString()})</CardTitle>
-          <CardDescription>Raw files uploaded for this job</CardDescription>
+          <CardTitle>Analysis</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <div className="grid grid-cols-2 gap-2">
-            {images.length === 0 && (
-              <p className="text-muted-foreground col-span-2 text-sm">
-                No files attached to this job.
-              </p>
-            )}
-            {images.map((image) => {
-              const isSelected = image.id === selectedImageId
-              return (
-                <div
-                  key={image.id}
-                  className={`flex flex-col gap-2 rounded-md border p-3 ${
-                    isSelected ? 'border-primary bg-accent/40' : ''
-                  }`}
-                >
-                  <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-sm font-medium">
-                      {image.filename}
-                    </span>
-                    <span className="text-muted-foreground text-xs">
-                      {formatBytes(image.sizeBytes)} ·{' '}
-                      {formatDate(image.createdAt)}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant={isSelected ? 'default' : 'outline'}
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => {
-                        setSelectedImageId(image.id)
-                      }}
-                    >
-                      {isSelected ? 'Viewing' : 'View 3D'}
-                    </Button>
-                    {image.downloadUrl && (
-                      <a
-                        href={image.downloadUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label="Download"
-                        className={buttonVariants({
-                          variant: 'outline',
-                          size: 'icon',
-                        })}
-                      >
-                        <Download className="size-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
           <ClassificationTasks value={result?.diagnosis_detail} />
 
           <Carousel opts={{ align: 'start' }} className="w-full">

@@ -48,9 +48,12 @@ export function AppSidebar() {
           <Avatar size="sm">
             <AvatarFallback>{initial}</AvatarFallback>
           </Avatar>
-          <span className="truncate text-sm group-data-[collapsible=icon]:hidden">
-            {email}
-          </span>
+          <div className="flex min-w-0 flex-col group-data-[collapsible=icon]:hidden">
+            <span className="truncate text-sm">{email}</span>
+            <span className="text-sidebar-foreground/60 truncate text-xs">
+              {isDoctor ? 'Admin' : 'Patient'}
+            </span>
+          </div>
         </div>
       </SidebarHeader>
 
