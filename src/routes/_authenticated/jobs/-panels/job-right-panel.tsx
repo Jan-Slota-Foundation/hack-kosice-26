@@ -26,7 +26,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Download } from 'lucide-react'
 
 import { useJobDetail } from '../-job-detail-context'
-import { ChartsGridSkeleton, FilesListSkeleton } from './skeletons'
+import {
+  ChartsGridSkeleton,
+  DiagnosisSkeleton,
+  FilesListSkeleton,
+} from './skeletons'
 
 function formatDate(date: Date | string | null | undefined) {
   if (!date) return null
@@ -41,34 +45,33 @@ function formatBytes(bytes: number | null | undefined) {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
-const MOCK_DIAGNOSES: { diagnosis: string; confidence: number }[] = [
-  { diagnosis: "Parkinson's Disease", confidence: 0.87 },
-  { diagnosis: "Alzheimer's Disease", confidence: 0.74 },
-  { diagnosis: 'Healthy Tissue', confidence: 0.93 },
-  { diagnosis: 'Amyloid Aggregation', confidence: 0.68 },
-  { diagnosis: 'Huntington’s Disease', confidence: 0.81 },
-]
+function graphTitle(type: 'HEIGHT_DISTRIBUTION' | 'DENSITY_VS_AREA'): string {
+  if (type === 'HEIGHT_DISTRIBUTION') return 'Height distribution'
+  return 'Density vs area'
+}
 
-function mockResultForImage(imageId: string | null): {
-  diagnosis: string
-  confidence: number
-} {
-  if (!imageId) return MOCK_DIAGNOSES[0]
-  let hash = 0
-  for (let i = 0; i < imageId.length; i++) {
-    hash = (hash * 31 + imageId.charCodeAt(i)) | 0
-  }
-  const idx = Math.abs(hash) % MOCK_DIAGNOSES.length
-  return MOCK_DIAGNOSES[idx]
+function graphDescription(
+  type: 'HEIGHT_DISTRIBUTION' | 'DENSITY_VS_AREA',
+): string {
+  if (type === 'HEIGHT_DISTRIBUTION')
+    return 'Occurrence frequency vs height (nm)'
+  return 'Density vs area'
 }
 
 export function JobRightPanel() {
-  const { jobQuery, job, images, selectedImageId, setSelectedImageId } =
-    useJobDetail()
+  const {
+    jobQuery,
+    job,
+    images,
+    selectedImage,
+    selectedImageId,
+    setSelectedImageId,
+  } = useJobDetail()
 
   if (jobQuery.isLoading) {
     return (
-      <div className="lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+      <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+        <DiagnosisSkeleton />
         <Card className="w-full">
           <CardHeader className="gap-2">
             <Skeleton className="h-5 w-32" />
@@ -96,9 +99,8 @@ export function JobRightPanel() {
 
   if (!job) return null
 
-  const { diagnosis: mockDiagnosis, confidence: mockConfidence } =
-    mockResultForImage(selectedImageId)
-  const confidencePct = Math.round(mockConfidence * 100)
+  const result = selectedImage?.result ?? null
+  const confidencePct = result ? Math.round(result.confidence * 100) : null
 
   return (
     <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
@@ -115,25 +117,31 @@ export function JobRightPanel() {
           </GradientCardDescription>
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <GradientCardTitle className="text-2xl font-semibold tracking-tight">
-              {mockDiagnosis}
+              {result?.diagnosis ?? 'Analysis pending'}
             </GradientCardTitle>
-            <Badge variant="secondary" className="text-xs font-medium">
-              {confidencePct.toString()}% confidence
-            </Badge>
+            {confidencePct !== null && (
+              <Badge variant="secondary" className="text-xs font-medium">
+                {confidencePct.toString()}% confidence
+              </Badge>
+            )}
           </div>
         </GradientCardHeader>
-        <GradientCardContent>
-          <div className="flex items-center justify-between text-[11px] font-medium">
-            <span className="text-muted-foreground">Model confidence</span>
-            <span className="tabular-nums">{confidencePct.toString()}%</span>
-          </div>
-          <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
-            <div
-              className="bg-primary h-full rounded-full transition-all"
-              style={{ width: `${confidencePct.toString()}%` }}
-            />
-          </div>
-        </GradientCardContent>
+        {confidencePct !== null && (
+          <GradientCardContent>
+            <div className="flex items-center justify-between text-[11px] font-medium">
+              <span className="text-muted-foreground">Model confidence</span>
+              <span className="tabular-nums">
+                {confidencePct.toString()}%
+              </span>
+            </div>
+            <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
+              <div
+                className="bg-primary h-full rounded-full transition-all"
+                style={{ width: `${confidencePct.toString()}%` }}
+              />
+            </div>
+          </GradientCardContent>
+        )}
       </GradientCard>
 
       <Card className="w-full">
@@ -204,23 +212,44 @@ export function JobRightPanel() {
               <CarouselNext className="static translate-y-0" />
             </div>
             <CarouselContent className="px-0.5 py-2">
-              {[1, 2, 3, 4].map((i) => (
-                <CarouselItem key={i} className="basis-2/3">
-                  <GradientCard className="h-56">
-                    <GradientCardHeader>
-                      <GradientCardTitle>
-                        Height distribution {i.toString()}
-                      </GradientCardTitle>
-                      <GradientCardDescription>
-                        Occurrence frequency vs height (nm)
-                      </GradientCardDescription>
-                    </GradientCardHeader>
-                    <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
-                      <HeightDistributionChart />
-                    </GradientCardContent>
-                  </GradientCard>
-                </CarouselItem>
-              ))}
+              {(result?.graphs.length ? result.graphs : [null]).map(
+                (graph, i) => {
+                  const hasData = !!graph?.points.length
+                  return (
+                    <CarouselItem
+                      key={graph?.id ?? `empty-${i.toString()}`}
+                      className="basis-2/3"
+                    >
+                      <GradientCard className="h-56">
+                        {hasData ? (
+                          <>
+                            <GradientCardHeader>
+                              <GradientCardTitle>
+                                {graphTitle(graph.type)}
+                              </GradientCardTitle>
+                              <GradientCardDescription>
+                                {graphDescription(graph.type)}
+                              </GradientCardDescription>
+                            </GradientCardHeader>
+                            <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
+                              <HeightDistributionChart
+                                data={graph.points.map((p) => ({
+                                  heightRange: p.x,
+                                  occurrenceFrequency: p.y,
+                                }))}
+                              />
+                            </GradientCardContent>
+                          </>
+                        ) : (
+                          <GradientCardContent className="text-muted-foreground flex flex-1 items-center justify-center text-sm">
+                            Waiting for data…
+                          </GradientCardContent>
+                        )}
+                      </GradientCard>
+                    </CarouselItem>
+                  )
+                },
+              )}
             </CarouselContent>
           </Carousel>
         </CardContent>

@@ -1,6 +1,14 @@
 import { trpc } from '@/lib/trpc'
 import type { inferRouterOutputs } from '@trpc/server'
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from 'react'
+import { toast } from 'sonner'
 
 import type { AppRouter } from '../../../../server/router'
 
@@ -41,7 +49,22 @@ export function JobDetailProvider({
   onSelectImage,
   children,
 }: JobDetailProviderProps) {
-  const jobQuery = trpc.analysisJobs.getById.useQuery({ id: jobId })
+  const jobQuery = trpc.analysisJobs.getById.useQuery(
+    { id: jobId },
+    {
+      refetchInterval: (q) =>
+        q.state.data?.job.status === 'PROCESSING' ? 5000 : false,
+    },
+  )
+
+  const prevStatusRef = useRef<JobData['status'] | null>(null)
+  const status = jobQuery.data?.job.status ?? null
+  useEffect(() => {
+    if (prevStatusRef.current === 'PROCESSING' && status === 'FINISHED') {
+      toast.success('Job finished')
+    }
+    prevStatusRef.current = status
+  }, [status])
 
   const value = useMemo<JobDetailContextValue>(() => {
     const job = jobQuery.data?.job ?? null

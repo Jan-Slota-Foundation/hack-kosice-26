@@ -4,7 +4,6 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-import { heightDistributionMock } from '@/lib/mock-height-distribution'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 
 const chartConfig = {
@@ -14,12 +13,28 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function HeightDistributionChart() {
+export interface HeightDistributionPoint {
+  heightRange: number
+  occurrenceFrequency: number
+}
+
+export function HeightDistributionChart({
+  data = [],
+}: {
+  data?: HeightDistributionPoint[]
+}) {
+  if (data.length === 0) {
+    return (
+      <div className="text-muted-foreground flex h-full w-full items-center justify-center text-xs">
+        No data yet
+      </div>
+    )
+  }
   return (
     <ChartContainer config={chartConfig} className="h-full w-full">
       <BarChart
         accessibilityLayer
-        data={heightDistributionMock}
+        data={data}
         margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
       >
         <XAxis

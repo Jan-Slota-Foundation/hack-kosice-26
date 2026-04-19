@@ -5,6 +5,27 @@ import {
 } from '@/components/ui/gradient-card'
 import { Skeleton } from '@/components/ui/skeleton'
 
+export function DiagnosisSkeleton() {
+  return (
+    <GradientCard className="w-full">
+      <GradientCardHeader className="gap-2">
+        <Skeleton className="h-3.5 w-32" />
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-5 w-24 rounded-full" />
+        </div>
+      </GradientCardHeader>
+      <GradientCardContent>
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-8" />
+        </div>
+        <Skeleton className="mt-2 h-2 w-full rounded-full" />
+      </GradientCardContent>
+    </GradientCard>
+  )
+}
+
 export function AfmSurfaceSkeleton() {
   return (
     <GradientCard className="relative h-full w-full gap-0 overflow-hidden py-0">
