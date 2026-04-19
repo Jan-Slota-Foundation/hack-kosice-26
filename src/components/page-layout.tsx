@@ -41,7 +41,9 @@ export function PageLayout({
           <div className="flex shrink-0 items-center gap-2">{actions}</div>
         ) : null}
       </div>
-      <div className="flex-1 overflow-auto p-4">{children}</div>
+      <div className="flex flex-1 flex-col gap-4 overflow-auto p-4">
+        {children}
+      </div>
     </div>
   )
 }

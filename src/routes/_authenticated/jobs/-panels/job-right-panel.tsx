@@ -8,6 +8,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+import {
   GradientCard,
   GradientCardContent,
   GradientCardDescription,
@@ -38,8 +45,8 @@ export function JobRightPanel() {
   if (jobQuery.isLoading) {
     return (
       <div className="flex flex-col gap-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-        <ChartsGridSkeleton />
         <FilesListSkeleton />
+        <ChartsGridSkeleton />
       </div>
     )
   }
@@ -64,24 +71,6 @@ export function JobRightPanel() {
           <span className="font-medium">Error:</span> {job.error}
         </div>
       )}
-
-      <div className="grid grid-cols-2 gap-4">
-        {[1, 2, 3, 4].map((i) => (
-          <GradientCard key={i} className="aspect-square">
-            <GradientCardHeader>
-              <GradientCardTitle>
-                Height distribution {i.toString()}
-              </GradientCardTitle>
-              <GradientCardDescription>
-                Occurrence frequency vs height (nm)
-              </GradientCardDescription>
-            </GradientCardHeader>
-            <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
-              <HeightDistributionChart />
-            </GradientCardContent>
-          </GradientCard>
-        ))}
-      </div>
 
       <Card>
         <CardHeader>
@@ -137,6 +126,30 @@ export function JobRightPanel() {
           })}
         </CardContent>
       </Card>
+
+      <Carousel opts={{ align: 'start' }} className="w-full">
+        <CarouselContent>
+          {[1, 2, 3, 4].map((i) => (
+            <CarouselItem key={i} className="basis-2/3">
+              <GradientCard className="aspect-video">
+                <GradientCardHeader>
+                  <GradientCardTitle>
+                    Height distribution {i.toString()}
+                  </GradientCardTitle>
+                  <GradientCardDescription>
+                    Occurrence frequency vs height (nm)
+                  </GradientCardDescription>
+                </GradientCardHeader>
+                <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
+                  <HeightDistributionChart />
+                </GradientCardContent>
+              </GradientCard>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-2" />
+        <CarouselNext className="right-2" />
+      </Carousel>
     </div>
   )
 }

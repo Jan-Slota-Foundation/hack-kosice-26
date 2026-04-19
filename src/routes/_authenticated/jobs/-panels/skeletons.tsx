@@ -16,18 +16,27 @@ export function AfmSurfaceSkeleton() {
 
 export function ChartsGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {[0, 1, 2, 3].map((i) => (
-        <GradientCard key={i} className="aspect-square">
-          <GradientCardHeader className="gap-2">
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-3 w-1/2" />
-          </GradientCardHeader>
-          <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
-            <Skeleton className="h-full w-full" />
-          </GradientCardContent>
-        </GradientCard>
-      ))}
+    <div className="relative">
+      <div className="overflow-hidden">
+        <div className="-ml-4 flex">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="min-w-0 shrink-0 grow-0 basis-2/3 pl-4"
+            >
+              <GradientCard className="aspect-video">
+                <GradientCardHeader className="gap-2">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/2" />
+                </GradientCardHeader>
+                <GradientCardContent className="min-h-0 flex-1 px-2 pb-2">
+                  <Skeleton className="h-full w-full" />
+                </GradientCardContent>
+              </GradientCard>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
