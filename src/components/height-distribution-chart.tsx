@@ -49,7 +49,14 @@ export function HeightDistributionChart() {
         <Bar
           dataKey="occurrenceFrequency"
           fill="var(--color-occurrenceFrequency)"
+          fillOpacity={0.75}
           radius={[2, 2, 0, 0]}
+          activeBar={{
+            fillOpacity: 1,
+            stroke: 'var(--color-occurrenceFrequency)',
+            strokeWidth: 2,
+            strokeOpacity: 0.5,
+          }}
         />
       </BarChart>
     </ChartContainer>

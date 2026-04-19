@@ -53,7 +53,7 @@ export const analysisJobsRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
     const jobs = await prisma.analysisJob.findMany({
       where: { creatorId: ctx.user.id },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
       include: { _count: { select: { images: true } } },
     })
     return { jobs }

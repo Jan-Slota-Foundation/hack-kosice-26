@@ -46,6 +46,7 @@ model AnalysisJob {
   status     JobStatus @default(PROCESSING)
   error      String?
   createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   finishedAt DateTime?
 
   creatorId String @db.Uuid
@@ -53,7 +54,7 @@ model AnalysisJob {
 
   images RawImage[]
 
-  @@index([creatorId, createdAt(sort: Desc)])
+  @@index([creatorId, updatedAt(sort: Desc)])
 }
 
 model RawImage {

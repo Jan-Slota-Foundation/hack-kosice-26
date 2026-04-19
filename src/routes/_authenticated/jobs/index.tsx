@@ -42,7 +42,7 @@ function JobCardSkeleton() {
           <Skeleton className="h-5 w-20 rounded-full" />
         </CardTitle>
         <CardDescription>
-          <Skeleton className="h-3 w-72" />
+          <Skeleton className="h-5 w-72" />
         </CardDescription>
       </CardHeader>
     </Card>

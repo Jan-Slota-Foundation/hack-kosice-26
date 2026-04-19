@@ -1,4 +1,3 @@
-import { Card, CardHeader } from '@/components/ui/card'
 import {
   GradientCard,
   GradientCardContent,
@@ -17,15 +16,19 @@ export function AfmSurfaceSkeleton() {
 export function ChartsGridSkeleton() {
   return (
     <div className="relative">
+      <div className="mb-2 flex justify-end gap-2">
+        <Skeleton className="size-8 rounded-full" />
+        <Skeleton className="size-8 rounded-full" />
+      </div>
       <div className="overflow-hidden">
-        <div className="-ml-4 flex">
+        <div className="-ml-4 flex py-2">
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
               className="min-w-0 shrink-0 grow-0 basis-2/3 pl-4"
             >
-              <GradientCard className="aspect-video">
-                <GradientCardHeader className="gap-2">
+              <GradientCard className="h-56">
+                <GradientCardHeader>
                   <Skeleton className="h-4 w-2/3" />
                   <Skeleton className="h-3 w-1/2" />
                 </GradientCardHeader>
@@ -43,22 +46,19 @@ export function ChartsGridSkeleton() {
 
 export function FilesListSkeleton() {
   return (
-    <Card>
-      <CardHeader className="gap-2">
-        <Skeleton className="h-5 w-32" />
-        <Skeleton className="h-3 w-48" />
-      </CardHeader>
-      <div className="flex flex-col gap-2 px-6 pb-6">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="flex items-center gap-3 rounded-md border p-3">
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <Skeleton className="h-4 w-3/5" />
-              <Skeleton className="h-3 w-2/5" />
-            </div>
-            <Skeleton className="h-8 w-20" />
+    <div className="grid grid-cols-2 gap-2">
+      {[0, 1].map((i) => (
+        <div key={i} className="flex flex-col gap-2 rounded-md border p-3">
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <Skeleton className="h-4 w-3/5" />
+            <Skeleton className="h-3 w-4/5" />
           </div>
-        ))}
-      </div>
-    </Card>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 flex-1" />
+            <Skeleton className="size-8" />
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
