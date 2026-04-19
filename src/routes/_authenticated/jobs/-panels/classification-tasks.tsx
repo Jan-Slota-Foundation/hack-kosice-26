@@ -24,11 +24,11 @@ function MethodConfidenceBar({
   value: number
   delayMs: number
 }) {
-  const target = value <= 1 ? value * 100 : value
-  const [width, setWidth] = useState(0)
+  const target = value <= 1 ? value : value / 100
+  const [scale, setScale] = useState(0)
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
-      setWidth(target)
+      setScale(target)
     })
     return () => {
       cancelAnimationFrame(raf)
@@ -37,11 +37,12 @@ function MethodConfidenceBar({
   return (
     <div className="bg-muted/60 h-1.5 w-full overflow-hidden rounded-full">
       <div
-        className="bg-primary h-full rounded-full transition-[width] ease-out"
+        className="bg-primary h-full w-full origin-left rounded-full transition-transform ease-out"
         style={{
-          width: `${width.toString()}%`,
+          transform: `scaleX(${scale.toString()})`,
           transitionDuration: '700ms',
           transitionDelay: `${delayMs.toString()}ms`,
+          willChange: 'transform',
         }}
       />
     </div>

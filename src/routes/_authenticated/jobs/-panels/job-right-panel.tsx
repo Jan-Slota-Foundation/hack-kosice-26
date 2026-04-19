@@ -33,10 +33,10 @@ function formatBytes(bytes: number | null | undefined) {
 }
 
 function ConfidenceBar({ value }: { value: number }) {
-  const [width, setWidth] = useState(0)
+  const [scale, setScale] = useState(0)
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      setWidth(value)
+      setScale(value / 100)
     })
     return () => {
       cancelAnimationFrame(id)
@@ -45,8 +45,8 @@ function ConfidenceBar({ value }: { value: number }) {
   return (
     <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
       <div
-        className="bg-primary h-full rounded-full transition-[width] duration-700 ease-out"
-        style={{ width: `${width.toString()}%` }}
+        className="bg-primary h-full w-full origin-left rounded-full transition-transform duration-700 ease-out"
+        style={{ transform: `scaleX(${scale.toString()})`, willChange: 'transform' }}
       />
     </div>
   )
