@@ -37,13 +37,40 @@ export const analysisJobsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(1).max(200),
+        patientId: z.uuid(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      const creator = await prisma.user.findUniqueOrThrow({
+        where: { id: ctx.user.id },
+        select: { id: true, role: true },
+      })
+
+      if (creator.role === 'PATIENT' && input.patientId !== ctx.user.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Patients can only create jobs for themselves',
+        })
+      }
+
+      if (creator.role === 'DOCTOR') {
+        const patient = await prisma.user.findFirst({
+          where: { id: input.patientId, doctorId: ctx.user.id },
+          select: { id: true },
+        })
+        if (!patient) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Patient not found or not assigned to you',
+          })
+        }
+      }
+
       const job = await prisma.analysisJob.create({
         data: {
           name: input.name,
           creatorId: ctx.user.id,
+          patientId: input.patientId,
         },
         select: { id: true },
       })

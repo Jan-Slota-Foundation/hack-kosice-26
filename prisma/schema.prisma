@@ -14,28 +14,31 @@ model User {
   id        String        @id @db.Uuid
   role      UserRole      @default(PATIENT)
   doctorId  String?       @db.Uuid
-  jobs      AnalysisJob[]
-  images    RawImage[]
-  doctor    User?         @relation("DoctorPatients", fields: [doctorId], references: [id])
-  patients  User[]        @relation("DoctorPatients")
+  jobs        AnalysisJob[] @relation("JobCreator")
+  patientJobs AnalysisJob[] @relation("JobPatient")
+  images      RawImage[]
+  doctor      User?         @relation("DoctorPatients", fields: [doctorId], references: [id])
+  patients    User[]        @relation("DoctorPatients")
 
   @@index([doctorId])
 }
 
 model AnalysisJob {
-  id               String     @id @default(uuid()) @db.Uuid
-  name             String
-  status           JobStatus  @default(PROCESSING)
-  error            String?
-  createdAt        DateTime   @default(now())
-  finishedAt       DateTime?
-  creatorId        String     @db.Uuid
-  updatedAt        DateTime   @default(now()) @updatedAt
-  diagnosis_detail Json?
-  creator          User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  images           RawImage[]
+  id         String     @id @default(uuid()) @db.Uuid
+  name       String
+  status     JobStatus  @default(PROCESSING)
+  error      String?
+  createdAt  DateTime   @default(now())
+  finishedAt DateTime?
+  creatorId  String     @db.Uuid
+  patientId  String     @db.Uuid
+  updatedAt  DateTime   @default(now()) @updatedAt
+  creator    User       @relation("JobCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  patient    User       @relation("JobPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  images     RawImage[]
 
   @@index([creatorId, updatedAt(sort: Desc)])
+  @@index([patientId, updatedAt(sort: Desc)])
 }
 
 model RawImage {
@@ -56,15 +59,16 @@ model RawImage {
 }
 
 model RawImageResult {
-  id         String         @id @default(uuid()) @db.Uuid
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  imageId    String         @unique @db.Uuid
-  diagnosis  String
-  confidence Float
-  image      RawImage       @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  graphs     ResultGraph[]
-  methods    ResultMethod[]
+  id               String         @id @default(uuid()) @db.Uuid
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  imageId          String         @unique @db.Uuid
+  diagnosis        String
+  confidence       Float
+  diagnosis_detail Json?
+  image            RawImage       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  graphs           ResultGraph[]
+  methods          ResultMethod[]
 }
 
 model ResultMethod {
@@ -79,11 +83,12 @@ model ResultMethod {
 }
 
 model ResultGraph {
-  id       String            @id @default(uuid()) @db.Uuid
-  type     AnalysisGraphType
-  resultId String            @db.Uuid
-  points   GraphPoint[]
-  result   RawImageResult    @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  id         String            @id @default(uuid()) @db.Uuid
+  type       AnalysisGraphType
+  resultId   String            @db.Uuid
+  graph_name String?
+  points     GraphPoint[]
+  result     RawImageResult    @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
   @@unique([resultId, type])
 }

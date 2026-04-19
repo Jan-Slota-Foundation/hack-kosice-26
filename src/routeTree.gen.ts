@@ -14,7 +14,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
-import { Route as AuthenticatedTearImagesRouteImport } from './routes/_authenticated/tear-images'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedPatientsIndexRouteImport } from './routes/_authenticated/patients/index'
 import { Route as AuthenticatedJobsIndexRouteImport } from './routes/_authenticated/jobs/index'
@@ -43,11 +42,6 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
   id: '/upload',
   path: '/upload',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedTearImagesRoute = AuthenticatedTearImagesRouteImport.update({
-  id: '/tear-images',
-  path: '/tear-images',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
@@ -82,7 +76,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/tear-images': typeof AuthenticatedTearImagesRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/users/$userId': typeof AuthenticatedUsersUserIdRoute
@@ -94,7 +87,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/tear-images': typeof AuthenticatedTearImagesRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/users/$userId': typeof AuthenticatedUsersUserIdRoute
@@ -108,7 +100,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_authenticated/tear-images': typeof AuthenticatedTearImagesRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/_authenticated/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
   '/_authenticated/users/$userId': typeof AuthenticatedUsersUserIdRoute
@@ -122,7 +113,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
-    | '/tear-images'
     | '/upload'
     | '/jobs/$jobId'
     | '/users/$userId'
@@ -134,7 +124,6 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
-    | '/tear-images'
     | '/upload'
     | '/jobs/$jobId'
     | '/users/$userId'
@@ -147,7 +136,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/signup'
-    | '/_authenticated/tear-images'
     | '/_authenticated/upload'
     | '/_authenticated/jobs/$jobId'
     | '/_authenticated/users/$userId'
@@ -200,13 +188,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUploadRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/tear-images': {
-      id: '/_authenticated/tear-images'
-      path: '/tear-images'
-      fullPath: '/tear-images'
-      preLoaderRoute: typeof AuthenticatedTearImagesRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -246,7 +227,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
-  AuthenticatedTearImagesRoute: typeof AuthenticatedTearImagesRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
   AuthenticatedJobsJobIdRoute: typeof AuthenticatedJobsJobIdRoute
   AuthenticatedUsersUserIdRoute: typeof AuthenticatedUsersUserIdRoute
@@ -256,7 +236,6 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedTearImagesRoute: AuthenticatedTearImagesRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
   AuthenticatedJobsJobIdRoute: AuthenticatedJobsJobIdRoute,
   AuthenticatedUsersUserIdRoute: AuthenticatedUsersUserIdRoute,

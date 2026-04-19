@@ -20,7 +20,7 @@ export const bytemapRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const job = await prisma.analysisJob.findFirst({
         where: { id: input.jobId, creatorId: ctx.user.id },
-        select: { id: true },
+        select: { id: true, patientId: true },
       })
       if (!job) {
         throw new TRPCError({
@@ -30,7 +30,7 @@ export const bytemapRouter = createTRPCRouter({
       }
 
       const safeName = input.filename.replace(/[^a-zA-Z0-9._-]/g, '_')
-      const path = `raw/${ctx.user.id}/${Date.now().toString()}-${safeName}`
+      const path = `raw/${job.patientId}/${Date.now().toString()}-${safeName}`
 
       const { data, error } = await supabaseAdmin.storage
         .from(BUCKET)
@@ -53,7 +53,7 @@ export const bytemapRouter = createTRPCRouter({
           contentType: input.contentType,
           storagePath: data.path,
           sizeBytes: input.data.byteLength,
-          userId: ctx.user.id,
+          userId: job.patientId,
           jobId: input.jobId,
         },
         select: { id: true, storagePath: true },
@@ -66,7 +66,13 @@ export const bytemapRouter = createTRPCRouter({
     .input(z.object({ path: z.string().min(1) }))
     .query(async ({ input, ctx }) => {
       const image = await prisma.rawImage.findFirst({
-        where: { storagePath: input.path, userId: ctx.user.id },
+        where: {
+          storagePath: input.path,
+          OR: [
+            { userId: ctx.user.id },
+            { job: { creatorId: ctx.user.id } },
+          ],
+        },
         select: { id: true },
       })
       if (!image) {

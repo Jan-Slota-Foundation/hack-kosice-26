@@ -13,10 +13,9 @@ import {
 import { useAuth } from '@/lib/auth-context'
 import { trpc } from '@/lib/trpc'
 import { Link, useRouter, useRouterState } from '@tanstack/react-router'
-import { ClipboardList, ImageIcon, LogOut, Plus, Users } from 'lucide-react'
+import { ClipboardList, LogOut, Plus, Users } from 'lucide-react'
 
 const navItems = [
-  { to: '/tear-images', label: 'Tear images', icon: ImageIcon },
   { to: '/jobs', label: 'Analysis jobs', icon: ClipboardList },
 ] as const
 

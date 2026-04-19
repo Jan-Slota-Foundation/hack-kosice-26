@@ -24,8 +24,10 @@ import {
 } from '@/components/ui/gradient-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Download } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 import { useJobDetail } from '../-job-detail-context'
+import { ClassificationTasks } from './classification-tasks'
 import {
   ChartsGridSkeleton,
   DiagnosisSkeleton,
@@ -43,6 +45,26 @@ function formatBytes(bytes: number | null | undefined) {
   if (bytes < 1024) return `${bytes.toString()} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+}
+
+function ConfidenceBar({ value }: { value: number }) {
+  const [width, setWidth] = useState(0)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setWidth(value)
+    })
+    return () => {
+      cancelAnimationFrame(id)
+    }
+  }, [value])
+  return (
+    <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
+      <div
+        className="bg-primary h-full rounded-full transition-[width] duration-700 ease-out"
+        style={{ width: `${width.toString()}%` }}
+      />
+    </div>
+  )
 }
 
 function graphTitle(type: 'HEIGHT_DISTRIBUTION' | 'DENSITY_VS_AREA'): string {
@@ -130,21 +152,14 @@ export function JobRightPanel() {
           <GradientCardContent>
             <div className="flex items-center justify-between text-[11px] font-medium">
               <span className="text-muted-foreground">Model confidence</span>
-              <span className="tabular-nums">
-                {confidencePct.toString()}%
-              </span>
+              <span className="tabular-nums">{confidencePct.toString()}%</span>
             </div>
-            <div className="bg-muted/60 mt-2 h-2 w-full overflow-hidden rounded-full">
-              <div
-                className="bg-primary h-full rounded-full transition-all"
-                style={{ width: `${confidencePct.toString()}%` }}
-              />
-            </div>
+            <ConfidenceBar value={confidencePct} />
           </GradientCardContent>
         )}
       </GradientCard>
 
-      <Card className="w-full">
+      <Card className="max-h-[calc(100svh-18rem)] w-full overflow-y-auto">
         <CardHeader>
           <CardTitle>Files ({images.length.toString()})</CardTitle>
           <CardDescription>Raw files uploaded for this job</CardDescription>
@@ -206,13 +221,15 @@ export function JobRightPanel() {
             })}
           </div>
 
+          <ClassificationTasks value={result?.diagnosis_detail} />
+
           <Carousel opts={{ align: 'start' }} className="w-full">
             <div className="mb-2 flex items-center justify-end gap-2">
               <CarouselPrevious className="static translate-y-0" />
               <CarouselNext className="static translate-y-0" />
             </div>
             <CarouselContent className="px-0.5 py-2">
-              {(result?.graphs.length ? result.graphs : [null]).map(
+              {(result?.graphs.length ? result.graphs : [null, null]).map(
                 (graph, i) => {
                   const hasData = !!graph?.points.length
                   return (
