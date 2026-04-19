@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,21 +7,96 @@ datasource db {
 }
 
 model User {
-  id        String   @id @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  email     String        @unique
   name      String
-  role      UserRole @default(PATIENT)
-
-  doctorId String? @db.Uuid
-  doctor   User?   @relation("DoctorPatients", fields: [doctorId], references: [id], onDelete: SetNull)
-  patients User[]  @relation("DoctorPatients")
-
-  jobs   AnalysisJob[]
-  images RawImage[]
+  id        String        @id @db.Uuid
+  role      UserRole      @default(PATIENT)
+  doctorId  String?       @db.Uuid
+  jobs      AnalysisJob[]
+  images    RawImage[]
+  doctor    User?         @relation("DoctorPatients", fields: [doctorId], references: [id])
+  patients  User[]        @relation("DoctorPatients")
 
   @@index([doctorId])
+}
+
+model AnalysisJob {
+  id               String     @id @default(uuid()) @db.Uuid
+  name             String
+  status           JobStatus  @default(PROCESSING)
+  error            String?
+  createdAt        DateTime   @default(now())
+  finishedAt       DateTime?
+  creatorId        String     @db.Uuid
+  updatedAt        DateTime   @default(now()) @updatedAt
+  diagnosis_detail Json?
+  creator          User       @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  images           RawImage[]
+
+  @@index([creatorId, updatedAt(sort: Desc)])
+}
+
+model RawImage {
+  id          String          @id @default(uuid()) @db.Uuid
+  filename    String
+  contentType String
+  storagePath String          @unique
+  sizeBytes   Int?
+  createdAt   DateTime        @default(now())
+  userId      String          @db.Uuid
+  jobId       String          @db.Uuid
+  job         AnalysisJob     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  result      RawImageResult?
+
+  @@index([userId])
+  @@index([jobId])
+}
+
+model RawImageResult {
+  id         String         @id @default(uuid()) @db.Uuid
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  imageId    String         @unique @db.Uuid
+  diagnosis  String
+  confidence Float
+  image      RawImage       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  graphs     ResultGraph[]
+  methods    ResultMethod[]
+}
+
+model ResultMethod {
+  id         String         @id @default(uuid()) @db.Uuid
+  name       String
+  diagnosis  String
+  confidence Float
+  resultId   String         @db.Uuid
+  result     RawImageResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@index([resultId])
+}
+
+model ResultGraph {
+  id       String            @id @default(uuid()) @db.Uuid
+  type     AnalysisGraphType
+  resultId String            @db.Uuid
+  points   GraphPoint[]
+  result   RawImageResult    @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@unique([resultId, type])
+}
+
+model GraphPoint {
+  id      String      @id @default(uuid()) @db.Uuid
+  idx     Int
+  x       Float
+  y       Float
+  graphId String      @db.Uuid
+  graph   ResultGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
+
+  @@index([graphId, idx])
 }
 
 enum UserRole {
@@ -40,95 +110,7 @@ enum JobStatus {
   ERROR
 }
 
-model AnalysisJob {
-  id         String    @id @default(uuid()) @db.Uuid
-  name       String
-  status     JobStatus @default(PROCESSING)
-  error      String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  finishedAt DateTime?
-
-  creatorId String @db.Uuid
-  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-
-  images RawImage[]
-
-  @@index([creatorId, updatedAt(sort: Desc)])
-}
-
-model RawImage {
-  id          String   @id @default(uuid()) @db.Uuid
-  filename    String
-  contentType String
-  storagePath String   @unique
-  sizeBytes   Int?
-  createdAt   DateTime @default(now())
-
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  jobId String      @db.Uuid
-  job   AnalysisJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  result RawImageResult?
-
-  @@index([userId])
-  @@index([jobId])
-}
-
-model RawImageResult {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  imageId String   @unique @db.Uuid
-  image   RawImage @relation(fields: [imageId], references: [id], onDelete: Cascade)
-
-  diagnosis  String
-  confidence Float
-
-  methods ResultMethod[]
-  graphs  ResultGraph[]
-}
-
-model ResultMethod {
-  id         String @id @default(uuid()) @db.Uuid
-  name       String
-  diagnosis  String
-  confidence Float
-
-  resultId String         @db.Uuid
-  result   RawImageResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
-
-  @@index([resultId])
-}
-
 enum AnalysisGraphType {
   HEIGHT_DISTRIBUTION
   DENSITY_VS_AREA
-}
-
-model ResultGraph {
-  id   String            @id @default(uuid()) @db.Uuid
-  type AnalysisGraphType
-
-  resultId String         @db.Uuid
-  result   RawImageResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
-
-  points GraphPoint[]
-
-  @@unique([resultId, type])
-}
-
-model GraphPoint {
-  id  String @id @default(uuid()) @db.Uuid
-  idx Int
-  x   Float
-  y   Float
-
-  graphId String      @db.Uuid
-  graph   ResultGraph @relation(fields: [graphId], references: [id], onDelete: Cascade)
-
-  @@index([graphId, idx])
 }
